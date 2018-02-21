@@ -32,16 +32,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/* Get the type of grid this is. There is no setter because a grid MUST keep its type consistant */
-	FORCEINLINE EGridType GetGridType() const { return GridType; };
+	UFUNCTION(BlueprintPure, Category="Grid")
+	EGridType GetGridType();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	/* This grid's type */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Grid")
 	EGridType GridType;
 
-private:
 	/*
 	Array of vectors, used to store the structure of the grid
 	The reason we store an array of vectors at each point is to allow for multilevel maps (e.g. going underneath a bridge)

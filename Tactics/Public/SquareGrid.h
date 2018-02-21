@@ -17,9 +17,23 @@ class TACTICS_API ASquareGrid : public AGrid
 	ASquareGrid();
 
 public:
-	FORCEINLINE int GetGridWidth() const { return GridWidth; };
+	UFUNCTION(BlueprintPure, Category = "Grid")
+	int GetGridWidth();
 
-	FORCEINLINE int GetGridLength() const { return GridLength; };
+	UFUNCTION(BlueprintPure, Category = "Grid")
+	int GetGridLength();
+
+	UFUNCTION(BlueprintPure, Category = "Grid")
+	int GetGridHeight();
+
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetGridWidth(int NewWidth);
+
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetGridLength(int NewLength);
+
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetGridHeight(int NewHeight);
 
 private:
 	/* Used to determine how wide this grid is */
@@ -27,6 +41,8 @@ private:
 
 	/* Used to determine how long the grid is */
 	int GridLength;
-	
+
+	/* Used to determine how tall the grid is, for 3D grids */
+	int GridHeight;
 	
 };

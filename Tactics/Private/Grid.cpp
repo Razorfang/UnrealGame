@@ -25,3 +25,7 @@ void AGrid::Tick(float DeltaTime)
 
 }
 
+EGridType AGrid::GetGridType()
+{
+	return GridType;
+}
