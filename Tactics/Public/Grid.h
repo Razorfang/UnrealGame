@@ -35,6 +35,11 @@ public:
 	UFUNCTION(BlueprintPure, Category="Grid")
 	EGridType GetGridType();
 
+	/* The grid origin is the position of where the first space on the grid would be placed. 
+	This is just the location of the Root Component, so we don't need to define a class variable*/ 
+	UFUNCTION(BlueprintPure, Category = "Grid")
+	FVector GetGridOrigin();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -57,5 +62,6 @@ protected:
 	This works by defining a mesh for a space of the grid (such as a square or hex), and copying it for each space*/ 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* GridMesh;
+
 
 };

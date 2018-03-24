@@ -31,11 +31,6 @@ int ASquareGrid::GetGridHeight()
 	return GridHeight;
 }
 
-FVector ASquareGrid::GetGridOrigin()
-{
-	return GridOrigin;
-}
-
 void ASquareGrid::SetGridWidth(int NewWidth)
 {
 	GridWidth = NewWidth;

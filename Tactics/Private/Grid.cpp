@@ -15,6 +15,7 @@ AGrid::AGrid()
 
 	//Base other stuff around the pickupmesh
 	RootComponent = GridMesh;
+
 }
 
 // Called when the game starts or when spawned
@@ -34,4 +35,9 @@ void AGrid::Tick(float DeltaTime)
 EGridType AGrid::GetGridType()
 {
 	return GridType;
+}
+
+FVector AGrid::GetGridOrigin()
+{
+	return GetActorLocation();
 }
