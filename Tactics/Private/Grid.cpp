@@ -9,6 +9,12 @@ AGrid::AGrid()
 
 	//We don't yet know what type of grid this is. This will be changed by the subclasses
 	GridType = EGridType::EUnknown;
+
+	//Create the static mesh component
+	GridMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridMesh"));
+
+	//Base other stuff around the pickupmesh
+	RootComponent = GridMesh;
 }
 
 // Called when the game starts or when spawned

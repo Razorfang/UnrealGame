@@ -5,14 +5,15 @@
 // Sets default values
 ASquareGrid::ASquareGrid()
 {
-
+	/*Set this grid's type, changing it from UNKNOWN to SQUARE*/
 	GridType = EGridType::ESquare;
 
+	//Set up the grid default size
 	GridWidth = 1;
 	GridLength = 1;
 	GridHeight = 0;
 
-	//TODO: Set up the grid default size
+
 }
 
 int ASquareGrid::GetGridWidth()
@@ -28,6 +29,11 @@ int ASquareGrid::GetGridLength()
 int ASquareGrid::GetGridHeight()
 {
 	return GridHeight;
+}
+
+FVector ASquareGrid::GetGridOrigin()
+{
+	return GridOrigin;
 }
 
 void ASquareGrid::SetGridWidth(int NewWidth)

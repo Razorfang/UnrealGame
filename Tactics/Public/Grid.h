@@ -53,4 +53,9 @@ protected:
 	*/
 	TArray<FVector> Grid;
 
+	/* Static mesh to represent the grid in the level 
+	This works by defining a mesh for a space of the grid (such as a square or hex), and copying it for each space*/ 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid", meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* GridMesh;
+
 };
