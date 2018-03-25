@@ -47,12 +47,12 @@ public:
 
 private:
 	/* Used to determine how wide this grid is. This is what we multiply by to translate cartesian to world */
-	int GridWidth;
+	float GridWidth;
 
 	/* Used to determine how long the grid is This is what we multiply by to translate cartesian to world */
-	int GridLength;
+	float GridLength;
 
 	/* Used to determine how tall the grid is, for 3D grids */
-	int GridHeight;
+	float GridHeight;
 	
 };
