@@ -63,11 +63,12 @@ protected:
 	This also is the most flexible way to hold it.
 	This type of grid means we can easily shift between any number of dimensions, depending on our game type
 	*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
 	TArray<FVector> Grid;
 
 	/* Static mesh to represent the grid in the level 
 	This works by defining a mesh for a space of the grid (such as a square or hex), and copying it for each space*/ 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
 	class UStaticMeshComponent* GridMesh;
 
 };
