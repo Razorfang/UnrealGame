@@ -9,51 +9,58 @@ ASquareGrid::ASquareGrid()
 	GridType = EGridType::ESquare;
 
 	//Set up the grid default size, a 1x1 grid
-	GridWidth = 1;
-	GridLength = 1;
-	GridHeight = 0;
+	TileWidth = 1;
+	TileLength = 1;
+	TileHeight = 0;
 
 	/*Resize the grid appropriately*/
 	Grid.Init(NULL_VECTOR, 1);
 }
 
-int ASquareGrid::GetGridWidth() const
+int ASquareGrid::GetTileWidth() const
 {
-	return GridWidth;
+	return TileWidth;
 }
 
-int ASquareGrid::GetGridLength() const
+int ASquareGrid::GetTileLength() const
 {
-	return GridLength;
+	return TileLength;
 }
 
-int ASquareGrid::GetGridHeight() const
+int ASquareGrid::GetTileHeight() const
 {
-	return GridHeight;
+	return TileHeight;
 }
 
-void ASquareGrid::SetGridWidth(int NewWidth)
+void ASquareGrid::SetTileWidth(float NewWidth)
 {
 	check((NewWidth > 0) && "Do not set the width to that! Delete the grid instead");
-	GridWidth = NewWidth;
+	TileWidth = NewWidth;
 
-	//TODO: Resize the grid
+	float OriginY = GetGridOrigin().Y;
+
+	/* Change the Y-value of all points in the grid */
+
+	/* TODO: Correct the appearance of the grid mesh */
 }
 
-void ASquareGrid::SetGridLength(int NewLength)
+void ASquareGrid::SetTileLength(float NewLength)
 {
 	check((NewLength > 0) && "Do not set the length to that! Delete the grid instead");
-	GridLength = NewLength;
+	TileLength = NewLength;
 
 	//TODO: Resize the grid
 
+	/* TODO: Correct the appearance of the grid mesh */
 }
 
-void ASquareGrid::SetGridHeight(int NewHeight)
+void ASquareGrid::SetTileHeight(float NewHeight)
 {
-	GridHeight = NewHeight;
+	TileHeight = NewHeight;
 
 	//TODO: Resize the grid
+
+	/* TODO: Correct the appearance of the grid mesh */
 }
 
 void ASquareGrid::AddTile(int x, int y, int z)

@@ -18,22 +18,22 @@ class TACTICS_API ASquareGrid : public AGrid
 
 public:
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetGridWidth() const;
+	int GetTileWidth() const;
 
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetGridLength() const;
+	int GetTileLength() const;
 
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetGridHeight() const;
+	int GetTileHeight() const;
 
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetGridWidth(int NewWidth);
+	void SetTileWidth(float NewWidth);
 
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetGridLength(int NewLength);
+	void SetTileLength(float NewLength);
 
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetGridHeight(int NewHeight);
+	void SetTileHeight(float NewHeight);
 
 	/*Add a tile to the grid at a specified point in space*/
 	UFUNCTION(BlueprintCallable, Category = "Grid")
@@ -46,13 +46,13 @@ public:
 
 
 private:
-	/* Used to determine how wide this grid is. This is what we multiply by to translate cartesian to world */
-	float GridWidth;
+	/* Used to determine how wide this grid is. This is what we multiply by to translate cartesian to world. Used to scale Y */
+	float TileWidth;
 
-	/* Used to determine how long the grid is This is what we multiply by to translate cartesian to world */
-	float GridLength;
+	/* Used to determine how long the grid is This is what we multiply by to translate cartesian to world. Used to scale X */
+	float TileLength;
 
-	/* Used to determine how tall the grid is, for 3D grids */
-	float GridHeight;
+	/* Used to determine how tall the grid is, for 3D grids. Used to scale Z */
+	float TileHeight;
 	
 };
