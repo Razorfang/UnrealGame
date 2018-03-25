@@ -12,9 +12,9 @@
 
 /* Because of the way our grid system works (where tiles can exist anywhere and everything in between
 	is filled with nothings), we need a way to define these nothings. We can't use (0,0,0) because that may very
-	well be the location of a grid. For our purposes, we will have a vector located at Not a Number, since
+	well be the location of a grid. For our purposes, we will have a vector located at Infinity, since
 	we don't want it to exist in-game */
-#define NULL_VECTOR FVector(NAN, NAN, NAN) 
+#define NULL_VECTOR FVector(INFINITY, INFINITY, INFINITY) 
 
 UENUM(BlueprintType)
 enum class EGridType : uint8
