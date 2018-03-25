@@ -9,6 +9,13 @@
 /*
 * Enumeration to keep track of the type of grid. This drastically affects the source code, so it's important to keep track
 */
+
+/* Because of the way our grid system works (where tiles can exist anywhere and everything in between
+	is filled with nothings), we need a way to define these nothings. We can't use (0,0,0) because that may very
+	well be the location of a grid. For our purposes, we will have a vector located at Not a Number, since
+	we don't want it to exist in-game */
+#define NULL_VECTOR FVector(NAN, NAN, NAN) 
+
 UENUM(BlueprintType)
 enum class EGridType : uint8
 {
@@ -33,12 +40,12 @@ public:
 
 	/* Get the type of grid this is. There is no setter because a grid MUST keep its type consistant */
 	UFUNCTION(BlueprintPure, Category="Grid")
-	EGridType GetGridType();
+	EGridType GetGridType() const;
 
 	/* The grid origin is the position of where the first space on the grid would be placed. 
 	This is just the location of the Root Component, so we don't need to define a class variable*/ 
 	UFUNCTION(BlueprintPure, Category = "Grid")
-	FVector GetGridOrigin();
+	FVector GetGridOrigin() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -62,6 +69,5 @@ protected:
 	This works by defining a mesh for a space of the grid (such as a square or hex), and copying it for each space*/ 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* GridMesh;
-
 
 };

@@ -32,12 +32,12 @@ void AGrid::Tick(float DeltaTime)
 
 }
 
-EGridType AGrid::GetGridType()
+EGridType AGrid::GetGridType() const
 {
 	return GridType;
 }
 
-FVector AGrid::GetGridOrigin()
+FVector AGrid::GetGridOrigin() const
 {
 	return GetActorLocation();
 }
