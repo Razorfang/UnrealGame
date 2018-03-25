@@ -16,6 +16,8 @@ AGrid::AGrid()
 	//Base other stuff around the pickupmesh
 	RootComponent = GridMesh;
 
+	/* TODO: Set mobility to stationary for efficient lighting */
+
 }
 
 // Called when the game starts or when spawned

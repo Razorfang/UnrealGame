@@ -50,7 +50,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void SetSizeY(float NewLength);
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void SetSizeZ(float NewHeight);
+	void SetSizeZ(float NewHeight);
 
 
 private:
@@ -68,4 +68,6 @@ private:
 	int SizeY;
 	int SizeZ;
 	
+	/* Converts an (x,y,z) point into an index for the Grid array */
+	int CoordToIndex(int x, int y, int z) const;
 };
