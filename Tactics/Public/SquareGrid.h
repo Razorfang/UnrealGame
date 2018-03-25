@@ -17,23 +17,6 @@ class TACTICS_API ASquareGrid : public AGrid
 	ASquareGrid();
 
 public:
-	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetTileWidth() const;
-
-	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetTileLength() const;
-
-	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetTileHeight() const;
-
-	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetTileWidth(float NewWidth);
-
-	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetTileLength(float NewLength);
-
-	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetTileHeight(float NewHeight);
 
 	/*Add a tile to the grid at a specified point in space*/
 	UFUNCTION(BlueprintCallable, Category = "Grid")
@@ -43,6 +26,31 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Grid")
 	void RemoveTile(int x, int y, int z);
 
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	int GetTileWidth() const;
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	int GetTileLength() const;
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	int GetTileHeight() const;
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetTileWidth(float NewWidth);
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetTileLength(float NewLength);
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetTileHeight(float NewHeight);
+
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	int GetSizeX() const;
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	int GetSizeY() const;
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	int GetSizeZ() const;
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetSizeX(float NewWidth);
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void SetSizeY(float NewLength);
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+		void SetSizeZ(float NewHeight);
 
 
 private:
@@ -54,5 +62,10 @@ private:
 
 	/* Used to determine how tall the grid is, for 3D grids. Used to scale Z */
 	float TileHeight;
+
+	/* Records the number of tiles in each direction*/
+	int SizeX;
+	int SizeY;
+	int SizeZ;
 	
 };

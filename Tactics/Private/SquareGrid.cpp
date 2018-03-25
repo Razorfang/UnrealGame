@@ -17,20 +17,19 @@ ASquareGrid::ASquareGrid()
 	Grid.Init(NULL_VECTOR, 1);
 }
 
-int ASquareGrid::GetTileWidth() const
+void ASquareGrid::AddTile(int x, int y, int z)
 {
-	return TileWidth;
+	/* TODO */
 }
 
-int ASquareGrid::GetTileLength() const
+void ASquareGrid::RemoveTile(int x, int y, int z)
 {
-	return TileLength;
+	/* TODO */
 }
 
-int ASquareGrid::GetTileHeight() const
-{
-	return TileHeight;
-}
+int ASquareGrid::GetTileWidth() const {return TileWidth;}
+int ASquareGrid::GetTileLength() const{return TileLength;}
+int ASquareGrid::GetTileHeight() const {return TileHeight;}
 
 void ASquareGrid::SetTileWidth(float NewWidth)
 {
@@ -49,7 +48,7 @@ void ASquareGrid::SetTileLength(float NewLength)
 	check((NewLength > 0) && "Do not set the length to that! Delete the grid instead");
 	TileLength = NewLength;
 
-	//TODO: Resize the grid
+	/* Change the X-value of all points in the grid */
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
@@ -58,17 +57,26 @@ void ASquareGrid::SetTileHeight(float NewHeight)
 {
 	TileHeight = NewHeight;
 
-	//TODO: Resize the grid
+	/* Change the Z-value of all points in the grid */
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
 
-void ASquareGrid::AddTile(int x, int y, int z)
+int ASquareGrid::GetSizeX() const { return SizeX; }
+int ASquareGrid::GetSizeY() const { return SizeY; }
+int ASquareGrid::GetSizeZ() const { return SizeZ; }
+
+void ASquareGrid::SetSizeX(float NewWidth)
+{
+	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+}
+
+void ASquareGrid::SetSizeY(float NewLength)
 {
 	/* TODO */
 }
 
-void ASquareGrid::RemoveTile(int x, int y, int z)
+void ASquareGrid::SetSizeZ(float NewHeight)
 {
 	/* TODO */
 }
