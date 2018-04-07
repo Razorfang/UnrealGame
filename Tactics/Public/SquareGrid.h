@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Grid.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "SquareGrid.generated.h"
 
 /**

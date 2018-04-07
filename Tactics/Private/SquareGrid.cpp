@@ -20,6 +20,19 @@ ASquareGrid::ASquareGrid()
 
 	/*Resize the grid appropriately*/
 	Grid.Init(NULL_VECTOR, 1);
+
+	/*Set the cell mesh here. For now, we will use the Plane mesh.*/
+	GridMesh->SetupAttachment(RootComponent);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane"));
+	if (CellAsset.Succeeded())
+	{
+		GridMesh->SetStaticMesh(CellAsset.Object);
+
+		/*Set the mesh location so that it is located at the only cell
+		TODO: Check if we want the point to be the middle or the bottom-left corner 
+		This is just a test*/
+		
+	}
 }
 
 int ASquareGrid::CoordToIndex(int x, int y, int z) const

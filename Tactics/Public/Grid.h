@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "GameFramework/Actor.h"
 #include "Grid.generated.h"
 
