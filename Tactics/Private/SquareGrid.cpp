@@ -11,7 +11,7 @@ ASquareGrid::ASquareGrid()
 	/* Each tile has a length and width of 1 to start*/
 	TileWidth = 1.0f;
 	TileLength = 1.0f;
-	TileHeight = 0.0f;
+	TileHeight = 1.0f;
 
 	/* Record that the grid is 1x1 */
 	SizeX = 1;
