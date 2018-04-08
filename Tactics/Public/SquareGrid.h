@@ -76,4 +76,5 @@ private:
 	void UpdateSizeX();
 	void UpdateSizeY();
 	void UpdateSizeZ();
+	void UpdateAllSizes();
 };

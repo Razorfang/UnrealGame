@@ -140,3 +140,10 @@ void ASquareGrid::UpdateSizeZ()
 {
 
 }
+
+void ASquareGrid::UpdateAllSizes()
+{
+	UpdateSizeX();
+	UpdateSizeY();
+	UpdateSizeZ();
+}
