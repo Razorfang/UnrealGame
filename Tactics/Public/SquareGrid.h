@@ -47,11 +47,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
 	int GetSizeZ() const;
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetSizeX(float NewWidth);
+	void SetSizeX(int NewSizeX);
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetSizeY(float NewLength);
+	void SetSizeY(int NewSizeY);
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void SetSizeZ(float NewHeight);
+	void SetSizeZ(int NewSizeZ);
 
 
 private:
@@ -71,4 +71,9 @@ private:
 	
 	/* Converts an (x,y,z) point into an index for the Grid array */
 	int CoordToIndex(int x, int y, int z) const;
+
+	/* To be called after a tile as added or removed from the grid, so that we have it correct*/
+	void UpdateSizeX();
+	void UpdateSizeY();
+	void UpdateSizeZ();
 };

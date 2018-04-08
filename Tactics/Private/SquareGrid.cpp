@@ -108,17 +108,35 @@ int ASquareGrid::GetSizeX() const { return SizeX; }
 int ASquareGrid::GetSizeY() const { return SizeY; }
 int ASquareGrid::GetSizeZ() const { return SizeZ; }
 
-void ASquareGrid::SetSizeX(float NewWidth)
+void ASquareGrid::SetSizeX(int NewSizeX)
 {
 	/* TODO: Resize the grid by adding and removing vectors from the grid array */
 }
 
-void ASquareGrid::SetSizeY(float NewLength)
+void ASquareGrid::SetSizeY(int NewSizeY)
 {
 	/* TODO */
 }
 
-void ASquareGrid::SetSizeZ(float NewHeight)
+void ASquareGrid::SetSizeZ(int NewSizeZ)
 {
 	/* TODO */
+}
+
+void ASquareGrid::UpdateSizeX()
+{
+	//Find how many cells are in the X dimension
+	int extentX = 0;
+
+	//Update accordingly
+}
+
+void ASquareGrid::UpdateSizeY()
+{
+
+}
+
+void ASquareGrid::UpdateSizeZ()
+{
+
 }
