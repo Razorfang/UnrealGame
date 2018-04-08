@@ -43,7 +43,6 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 
 void ASquareGrid::AddTile(int x, int y, int z)
 {
-
 	FVector GridOrigin = GetGridOrigin();
 	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 
@@ -58,15 +57,12 @@ void ASquareGrid::AddTile(int x, int y, int z)
 	//If we're adding a tile outside the current grid, we add the new vector, then fill in the gaps with null vectors
 	else if (index >= Grid.Num())
 	{
-
-		int OldSize = Grid.Num();
 		//Add more null vectors as needed
-		for (int i = 0; i < (index - OldSize); i++)
+		for (int i = 0; i < (index - Grid.Num()); i++)
 		{
 			Grid.Add(NULL_VECTOR);
 		}
 		Grid.Add(NewTile);
-
 	}
 	else
 	{
@@ -78,7 +74,32 @@ void ASquareGrid::AddTile(int x, int y, int z)
 
 void ASquareGrid::AddNullTile(int x, int y, int z)
 {
-	//TODO
+	FVector GridOrigin = GetGridOrigin();
+	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
+
+	int index = CoordToIndex(x, y, z);
+
+	//If there is an existing tile there, we overwrite it
+	if (Grid[index] != NULL_VECTOR)
+	{
+		Grid.Insert(NewTile, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
+	}
+
+	//If we're adding a tile outside the current grid, we add a bunch of null vectors
+	else if (index >= Grid.Num())
+	{
+		//Add more null vectors as needed
+		for (int i = 0; i < (index - Grid.Num() + 1); i++)
+		{
+			Grid.Add(NULL_VECTOR);
+		}
+	}
+	else
+	{
+		//If there is a null tile there, we do nothing
+	}
+
+	UpdateAllSizes(); //While it may not be necessary to update all dimensions after only one tile is added, I'm not taking any chances
 }
 
 void ASquareGrid::RemoveTile(int x, int y, int z)
