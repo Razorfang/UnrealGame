@@ -27,12 +27,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Grid")
 	void RemoveTile(int x, int y, int z);
 
+	/* Width is Y, Length is X, Height is Z */
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetTileWidth() const;
+	float GetTileWidth() const;
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetTileLength() const;
+	float GetTileLength() const;
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-	int GetTileHeight() const;
+	float GetTileHeight() const;
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void SetTileWidth(float NewWidth);
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
@@ -68,6 +69,7 @@ private:
 	int SizeX;
 	int SizeY;
 	int SizeZ;
+
 	
 	/* Converts an (x,y,z) point into an index for the Grid array */
 	int CoordToIndex(int x, int y, int z) const;

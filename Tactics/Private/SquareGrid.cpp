@@ -43,35 +43,30 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 
 void ASquareGrid::AddTile(int x, int y, int z)
 {
-	/* TODO */
+	/* Check if we have something at that spot. This can be something, or a null vector.
+	If nothing is at that location, add the tile there and update everything as needed
+	If a null vector is there, overwrite it
+	If a non-null vector is there, we will always overwrite it
+
+	In all cases
+	*/
+
+	FVector GridOrigin = GetGridOrigin();
+	FVector NewTilePosition(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
+
+	int index = CoordToIndex(x, y, z);
+	Grid.Insert(NewTilePosition, index); //Does this resize? Does this overwrite?
+	UpdateAllSizes();
 }
 
 void ASquareGrid::RemoveTile(int x, int y, int z)
 {
-	/* If the tile is at the end, chop it off and resize the array*/
-	if (CoordToIndex(x,y,z) == Grid.Num() - 1)
-	{
-		Grid.Pop(); /* TODO: Check that this does what I think it does, which is remove the last element and resize the array*/
-
-		/* If we have a one-dimensional line grid with no height, then we need to resize now. 
-		Unless it's the last element, in which case we wanted to delete the grid class */
-		check((Grid.Num() > 0) && "You are trying to remove the last tile. Please just delete the entire grid");
-
-	}
-
-	/* Otherwise, replace the tile with a null vector */
-	else 
-	{
-		Grid.Insert(NULL_VECTOR, CoordToIndex(x, y, z)); /* TODO: Check that this overwrites, and doesn't just do nothing */
-	}
-
-	/* There are many cases where we want to resize the grid depending on what we deleted. 
-	TODO: Check for all possible cases */
+	/* TODO */
 }
 
-int ASquareGrid::GetTileWidth() const {return TileWidth;}
-int ASquareGrid::GetTileLength() const{return TileLength;}
-int ASquareGrid::GetTileHeight() const {return TileHeight;}
+float ASquareGrid::GetTileWidth() const {return TileWidth;}
+float ASquareGrid::GetTileLength() const{return TileLength;}
+float ASquareGrid::GetTileHeight() const {return TileHeight;}
 
 void ASquareGrid::SetTileWidth(float NewWidth)
 {
@@ -125,20 +120,63 @@ void ASquareGrid::SetSizeZ(int NewSizeZ)
 
 void ASquareGrid::UpdateSizeX()
 {
-	//Find how many cells are in the X dimension
-	int extentX = 0;
+	//Find how many cells are in the X dimension. Done by checking all in first X row
+	float LargestCoordInX = GetGridOrigin().X;
 
-	//Update accordingly
+	//Iterate through all of the locations, checking for the largest X
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		if (Grid[i].X > LargestCoordInX)
+		{
+			LargestCoordInX = Grid[i].X;
+		}
+	}
+
+	float LengthX = LargestCoordInX - GetGridOrigin().X;
+
+	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
+	SetSizeX(round(LengthX / GetTileLength()));
+	
 }
 
 void ASquareGrid::UpdateSizeY()
 {
+	//Find how many cells are in the X dimension. Done by checking all in first X row
+	float LargestCoordInY = GetGridOrigin().Y;
 
+	//Iterate through all of the locations, checking for the largest X
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		if (Grid[i].Y > LargestCoordInY)
+		{
+			LargestCoordInY = Grid[i].Y;
+		}
+	}
+
+	float WidthY = LargestCoordInY - GetGridOrigin().Y;
+
+	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
+	SetSizeY(round(WidthY / GetTileWidth()));
 }
 
 void ASquareGrid::UpdateSizeZ()
 {
+	//Find how many cells are in the X dimension. Done by checking all in first X row
+	float LargestCoordInZ = GetGridOrigin().Z;
 
+	//Iterate through all of the locations, checking for the largest X
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		if (Grid[i].Z > LargestCoordInZ)
+		{
+			LargestCoordInZ = Grid[i].Z;
+		}
+	}
+
+	float HeightZ = LargestCoordInZ - GetGridOrigin().Z;
+
+	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
+	SetSizeZ(round(HeightZ / GetTileHeight()));
 }
 
 void ASquareGrid::UpdateAllSizes()
