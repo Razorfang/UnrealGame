@@ -43,20 +43,13 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 
 void ASquareGrid::AddTile(int x, int y, int z)
 {
-	/* Check if we have something at that spot. This can be something, or a null vector.
-	If nothing is at that location, add the tile there and update everything as needed
-	If a null vector is there, overwrite it
-	If a non-null vector is there, we will always overwrite it
-
-	In all cases
-	*/
 
 	FVector GridOrigin = GetGridOrigin();
 	FVector NewTilePosition(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 
 	int index = CoordToIndex(x, y, z);
 	Grid.Insert(NewTilePosition, index); //Does this resize? Does this overwrite?
-	UpdateAllSizes();
+	UpdateAllSizes(); //While it may not be necessary to update all dimensions after only one tile is added, I'm not taking any chances
 }
 
 void ASquareGrid::RemoveTile(int x, int y, int z)
@@ -75,7 +68,11 @@ void ASquareGrid::SetTileWidth(float NewWidth)
 
 	float OriginY = GetGridOrigin().Y;
 
-	/* TODO: Change the Y-value of all points in the grid */
+	/* Change the Y-value of all points in the grid */
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		Grid[i].Y = NewWidth;
+	}
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
@@ -85,7 +82,11 @@ void ASquareGrid::SetTileLength(float NewLength)
 	check((NewLength > 0) && "Do not set the tile length to that! Delete the grid instead");
 	TileLength = NewLength;
 
-	/* TODO: Change the X-value of all points in the grid */
+	/* Change the X-value of all points in the grid */
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		Grid[i].X = NewLength;
+	}
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
@@ -94,7 +95,11 @@ void ASquareGrid::SetTileHeight(float NewHeight)
 {
 	TileHeight = NewHeight;
 
-	/* TODO: Change the Z-value of all points in the grid */
+	/* Change the Z-value of all points in the grid */
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		Grid[i].Z = NewHeight;
+	}
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
