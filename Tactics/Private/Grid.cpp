@@ -5,7 +5,7 @@
 AGrid::AGrid()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	//We don't yet know what type of grid this is. This will be changed by the subclasses
 	GridType = EGridType::EUnknown;
