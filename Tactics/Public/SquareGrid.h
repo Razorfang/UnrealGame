@@ -20,11 +20,15 @@ class TACTICS_API ASquareGrid : public AGrid
 public:
 
 	/*Add a tile to the grid at a specified point in space*/
-	UFUNCTION(BlueprintCallable, Category = "Grid")
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void AddTile(int x, int y, int z);
 
+	/*Add a tile to the grid at a specified point in space*/
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void AddNullTile(int x, int y, int z);
+
 	/*Remove a tile from the grid, if it exists*/
-	UFUNCTION(BlueprintCallable, Category = "Grid")
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void RemoveTile(int x, int y, int z);
 
 	/* Width is Y, Length is X, Height is Z */

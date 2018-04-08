@@ -45,11 +45,40 @@ void ASquareGrid::AddTile(int x, int y, int z)
 {
 
 	FVector GridOrigin = GetGridOrigin();
-	FVector NewTilePosition(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
+	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 
 	int index = CoordToIndex(x, y, z);
-	Grid.Insert(NewTilePosition, index); //Does this resize? Does this overwrite?
+
+	//If there is a null vector there, then we overwrite it
+	if (Grid[index] == NULL_VECTOR)
+	{
+		Grid.Insert(NewTile, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
+	}	
+
+	//If we're adding a tile outside the current grid, we add the new vector, then fill in the gaps with null vectors
+	else if (index >= Grid.Num())
+	{
+
+		int OldSize = Grid.Num();
+		//Add more null vectors as needed
+		for (int i = 0; i < (index - OldSize); i++)
+		{
+			Grid.Add(NULL_VECTOR);
+		}
+		Grid.Add(NewTile);
+
+	}
+	else
+	{
+		//If there is another tile at the index, then we should leave it be
+	}
+
 	UpdateAllSizes(); //While it may not be necessary to update all dimensions after only one tile is added, I'm not taking any chances
+}
+
+void ASquareGrid::AddNullTile(int x, int y, int z)
+{
+	//TODO
 }
 
 void ASquareGrid::RemoveTile(int x, int y, int z)
@@ -111,15 +140,37 @@ int ASquareGrid::GetSizeZ() const { return SizeZ; }
 void ASquareGrid::SetSizeX(int NewSizeX)
 {
 	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+
+	//Shrinking
+	if (NewSizeX < SizeX)
+	{
+		//Removing elements
+	}
+
+	//Growing
+	else if (NewSizeX > SizeX)
+	{
+		//Adding more null vectors
+	}
+
+	//Else, the sizes are the same, and we do nothing
+
+	SizeX = NewSizeX;
+
+
+
+	//Since updating the sizes is already done by the AddTile function, we don't need to do it here
 }
 
 void ASquareGrid::SetSizeY(int NewSizeY)
 {
+	SizeY = NewSizeY;
 	/* TODO */
 }
 
 void ASquareGrid::SetSizeZ(int NewSizeZ)
 {
+	SizeZ = NewSizeZ;
 	/* TODO */
 }
 
