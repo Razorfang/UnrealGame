@@ -21,7 +21,7 @@ ASquareGrid::ASquareGrid()
 	SizeZ = 1; //2D grids, such as an 8x8 chess board, have a height of 1 in this system
 
 	/*Resize the grid appropriately*/
-	Grid.Init(NULL_VECTOR, 1);
+	Grid.Init(GetGridOrigin(), 1);
 
 	/*Set the cell mesh here. For now, we will use the Plane mesh.*/
 	GridMesh->SetupAttachment(RootComponent);
