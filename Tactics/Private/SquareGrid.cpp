@@ -2,6 +2,8 @@
 
 #include "SquareGrid.h"
 
+/* TODO: Should we trim NULL_VECTORS from the end of the grid, since it kind of goes against our system? */
+
 // Sets default values
 ASquareGrid::ASquareGrid()
 {
@@ -46,16 +48,10 @@ void ASquareGrid::AddTile(int x, int y, int z)
 	FVector GridOrigin = GetGridOrigin();
 	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 
-	int index = CoordToIndex(x, y, z);
-
-	//If there is a null vector there, then we overwrite it
-	if (Grid[index] == NULL_VECTOR)
-	{
-		Grid.Insert(NewTile, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
-	}	
+	int index = CoordToIndex(x, y, z);	
 
 	//If we're adding a tile outside the current grid, we add the new vector, then fill in the gaps with null vectors
-	else if (index >= Grid.Num())
+	if (index >= Grid.Num())
 	{
 		//Add more null vectors as needed
 		for (int i = 0; i < (index - Grid.Num()); i++)
@@ -64,6 +60,13 @@ void ASquareGrid::AddTile(int x, int y, int z)
 		}
 		Grid.Add(NewTile);
 	}
+
+	//If there is a null vector there, then we overwrite it
+	else if (Grid[index] == NULL_VECTOR)
+	{
+		Grid.Insert(NewTile, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
+	}
+
 	else
 	{
 		//If there is another tile at the index, then we should leave it be
@@ -74,19 +77,11 @@ void ASquareGrid::AddTile(int x, int y, int z)
 
 void ASquareGrid::AddNullTile(int x, int y, int z)
 {
-	FVector GridOrigin = GetGridOrigin();
-	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 
 	int index = CoordToIndex(x, y, z);
 
-	//If there is an existing tile there, we overwrite it
-	if (Grid[index] != NULL_VECTOR)
-	{
-		Grid.Insert(NewTile, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
-	}
-
 	//If we're adding a tile outside the current grid, we add a bunch of null vectors
-	else if (index >= Grid.Num())
+	if (index >= Grid.Num())
 	{
 		//Add more null vectors as needed
 		for (int i = 0; i < (index - Grid.Num() + 1); i++)
@@ -94,6 +89,13 @@ void ASquareGrid::AddNullTile(int x, int y, int z)
 			Grid.Add(NULL_VECTOR);
 		}
 	}
+
+	//If there is an existing tile there, we overwrite it
+	else if (Grid[index] != NULL_VECTOR)
+	{
+		Grid.Insert(NULL_VECTOR, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
+	}
+
 	else
 	{
 		//If there is a null tile there, we do nothing
@@ -102,9 +104,51 @@ void ASquareGrid::AddNullTile(int x, int y, int z)
 	UpdateAllSizes(); //While it may not be necessary to update all dimensions after only one tile is added, I'm not taking any chances
 }
 
+
 void ASquareGrid::RemoveTile(int x, int y, int z)
 {
-	/* TODO */
+	int Index = CoordToIndex(x, y, z);
+	
+	//If the tile is is within bounds, remove it and resize the grid (regardless of if it is null or not)
+	if (Index < Grid.Num())
+	{
+		//We do this by swapping repeatedly, then popping
+		while (Index < Grid.Num() - 1)
+		{
+			Grid.Swap(Index, Index + 1);
+			Index++;
+		}
+		Grid.Pop();
+
+	}
+	//If the tile is outside the grid bounds, do nothing
+	else
+	{
+		
+	}
+	
+	UpdateAllSizes();
+}
+
+void ASquareGrid::NullifyTile(int x, int y, int z)
+{
+	int Index = CoordToIndex(x, y, z);
+
+	/* Within grid bounds */
+	if (Index < Grid.Num())
+	{
+		//If the tile is non-null, turn it null
+		if (Grid[Index] != NULL_VECTOR)
+		{
+			Grid.Insert(NULL_VECTOR, Index);
+		}
+
+		//If the tile is null, do nothing
+	}
+
+	//If outside the bounds of the grid, throw a warning, saying to use AddNull instead (TODO)
+
+	UpdateAllSizes();
 }
 
 float ASquareGrid::GetTileWidth() const {return TileWidth;}
@@ -160,33 +204,33 @@ int ASquareGrid::GetSizeZ() const { return SizeZ; }
 
 void ASquareGrid::SetSizeX(int NewSizeX)
 {
+	/* TODO */
+}
+
+void ASquareGrid::SetSizeY(int NewSizeY)
+{
 	/* TODO: Resize the grid by adding and removing vectors from the grid array */
 
 	//Shrinking
-	if (NewSizeX < SizeX)
+	if (NewSizeY < SizeY)
 	{
 		//Removing elements
 	}
 
 	//Growing
-	else if (NewSizeX > SizeX)
+	else if (NewSizeY > SizeY)
 	{
 		//Adding more null vectors
+		
 	}
 
 	//Else, the sizes are the same, and we do nothing
 
-	SizeX = NewSizeX;
+	SizeY = NewSizeY;
 
 
 
 	//Since updating the sizes is already done by the AddTile function, we don't need to do it here
-}
-
-void ASquareGrid::SetSizeY(int NewSizeY)
-{
-	SizeY = NewSizeY;
-	/* TODO */
 }
 
 void ASquareGrid::SetSizeZ(int NewSizeZ)

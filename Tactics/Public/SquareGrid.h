@@ -27,9 +27,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void AddNullTile(int x, int y, int z);
 
-	/*Remove a tile from the grid, if it exists*/
+	/*Remove a tile from the grid, if it exists. This means adjusting the grid*/
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void RemoveTile(int x, int y, int z);
+
+	/*Turn a tile into a null vector*/
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void NullifyTile(int x, int y, int z);
 
 	/* Width is Y, Length is X, Height is Z */
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
