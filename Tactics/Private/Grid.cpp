@@ -14,7 +14,7 @@ AGrid::AGrid()
 	GridMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridMesh"));
 
 	//Base other stuff around this component. Not needed for our example, but we may come back to this
-	//RootComponent = GridMesh;
+	RootComponent = GridMesh;
 
 	/* TODO: Set mobility to stationary for efficient lighting */
 	
@@ -41,5 +41,6 @@ EGridType AGrid::GetGridType() const
 
 FVector AGrid::GetGridOrigin() const
 {
-	return GetActorLocation();
+	return GetActorLocation(); //This returns the rootcomponent's location relative to the centre of the actor, not our world location
+	//return GridMesh->GetComponentLocation();
 }

@@ -4,6 +4,7 @@
 
 /* TODO: Should we trim NULL_VECTORS from the end of the grid, since it kind of goes against our system? */
 
+
 // Sets default values
 ASquareGrid::ASquareGrid()
 {
@@ -20,11 +21,13 @@ ASquareGrid::ASquareGrid()
 	SizeY = 1;
 	SizeZ = 1; //2D grids, such as an 8x8 chess board, have a height of 1 in this system
 
+	UE_LOG(LogTemp, Warning, TEXT("The origin is %f,%f,%f"), GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z);
+
 	/*Resize the grid appropriately*/
 	Grid.Init(GetGridOrigin(), 1);
 
 	/*Set the cell mesh here. For now, we will use the Plane mesh.*/
-	GridMesh->SetupAttachment(RootComponent);
+	//GridMesh->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane"));
 	if (CellAsset.Succeeded())
 	{
@@ -39,6 +42,7 @@ ASquareGrid::ASquareGrid()
 
 int ASquareGrid::CoordToIndex(int x, int y, int z) const
 {
+	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (SizeX * SizeY) * z + (SizeY)* x + y);
 	/* If you need to understand this equation, please email me and I'll send a scan of my equations */
 	return (SizeX * SizeY) * z + (SizeY) * x + y;
 }
@@ -47,6 +51,7 @@ void ASquareGrid::AddTile(int x, int y, int z)
 {
 	FVector GridOrigin = GetGridOrigin();
 	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
+	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
 
 	int index = CoordToIndex(x, y, z);	
 
@@ -59,17 +64,23 @@ void ASquareGrid::AddTile(int x, int y, int z)
 			Grid.Add(NULL_VECTOR);
 		}
 		Grid.Add(NewTile);
+
+		UE_LOG(LogTemp, Warning, TEXT("Adding tile to the end of the grid and filling in space"));
 	}
 
 	//If there is a null vector there, then we overwrite it
 	else if (Grid[index] == NULL_VECTOR)
 	{
 		Grid.Insert(NewTile, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
+
+		UE_LOG(LogTemp, Warning, TEXT("Overwriting null vector with new tile"));
+
 	}
 
 	else
 	{
 		//If there is another tile at the index, then we should leave it be
+		UE_LOG(LogTemp, Warning, TEXT("Valid tile at that index, no reason to add"));
 	}
 
 	UpdateAllSizes(); //While it may not be necessary to update all dimensions after only one tile is added, I'm not taking any chances
@@ -241,6 +252,9 @@ void ASquareGrid::SetSizeZ(int NewSizeZ)
 
 void ASquareGrid::UpdateSizeX()
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("Updating Size X"));
+
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInX = GetGridOrigin().X;
 
@@ -257,11 +271,15 @@ void ASquareGrid::UpdateSizeX()
 
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
 	SetSizeX(round(LengthX / GetTileLength()));
+
+	UE_LOG(LogTemp, Warning, TEXT("New Size X is %d"), GetSizeX());
 	
 }
 
 void ASquareGrid::UpdateSizeY()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Updating Size Y"));
+
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInY = GetGridOrigin().Y;
 
@@ -270,18 +288,26 @@ void ASquareGrid::UpdateSizeY()
 	{
 		if (Grid[i].Y > LargestCoordInY)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Grid[i] = %f"), Grid[i].Y);
 			LargestCoordInY = Grid[i].Y;
 		}
 	}
 
 	float WidthY = LargestCoordInY - GetGridOrigin().Y;
-
+	UE_LOG(LogTemp, Warning, TEXT("GetGridOrigin().Y = %f"), GetGridOrigin().Y);
+	UE_LOG(LogTemp, Warning, TEXT("WidthY = %f"), WidthY);
+	UE_LOG(LogTemp, Warning, TEXT("Tile Width = %f"), GetTileWidth());
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
 	SetSizeY(round(WidthY / GetTileWidth()));
+
+	UE_LOG(LogTemp, Warning, TEXT("New Size Y is %d"), GetSizeY());
 }
 
 void ASquareGrid::UpdateSizeZ()
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("Updating Size Z"));
+
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInZ = GetGridOrigin().Z;
 
@@ -298,6 +324,9 @@ void ASquareGrid::UpdateSizeZ()
 
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
 	SetSizeZ(round(HeightZ / GetTileHeight()));
+
+	UE_LOG(LogTemp, Warning, TEXT("New Size Z is %d"), GetSizeZ());
+
 }
 
 void ASquareGrid::UpdateAllSizes()
