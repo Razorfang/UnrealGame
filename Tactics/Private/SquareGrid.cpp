@@ -270,7 +270,7 @@ void ASquareGrid::UpdateSizeX()
 	float LengthX = LargestCoordInX - GetGridOrigin().X;
 
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
-	SetSizeX(round(LengthX / GetTileLength()));
+	SetSizeX(round(LengthX / GetTileLength()) + 1);
 
 	UE_LOG(LogTemp, Warning, TEXT("New Size X is %d"), GetSizeX());
 	
@@ -298,7 +298,7 @@ void ASquareGrid::UpdateSizeY()
 	UE_LOG(LogTemp, Warning, TEXT("WidthY = %f"), WidthY);
 	UE_LOG(LogTemp, Warning, TEXT("Tile Width = %f"), GetTileWidth());
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
-	SetSizeY(round(WidthY / GetTileWidth()));
+	SetSizeY(round(WidthY / GetTileWidth()) + 1);
 
 	UE_LOG(LogTemp, Warning, TEXT("New Size Y is %d"), GetSizeY());
 }
@@ -323,7 +323,7 @@ void ASquareGrid::UpdateSizeZ()
 	float HeightZ = LargestCoordInZ - GetGridOrigin().Z;
 
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
-	SetSizeZ(round(HeightZ / GetTileHeight()));
+	SetSizeZ(round(HeightZ / GetTileHeight()) + 1);
 
 	UE_LOG(LogTemp, Warning, TEXT("New Size Z is %d"), GetSizeZ());
 
