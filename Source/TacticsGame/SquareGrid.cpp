@@ -42,9 +42,9 @@ ASquareGrid::ASquareGrid()
 
 int ASquareGrid::CoordToIndex(int x, int y, int z) const
 {
-	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (SizeX * SizeY) * z + (SizeY)* x + y);
+	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (SizeX * SizeY) * z + (SizeX)* y + x);
 	/* If you need to understand this equation, please email me and I'll send a scan of my equations */
-	return (SizeX * SizeY) * z + (SizeY)* x + y;
+	return (SizeX * SizeY) * z + (SizeX)* y + x;
 }
 
 void ASquareGrid::AddTile(int x, int y, int z)
