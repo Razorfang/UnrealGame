@@ -1,7 +1,7 @@
 #include "Grid.h"
 #include "AutomationTest.h"
 
-/*IMPLEMENT_SIMPLE_AUTOMATION_TEST(FConstructionTest, "GridTest.Grid.ConstructorTest", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FConstructionTest, "GridTest.Grid.Constructor Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
 bool FConstructionTest::RunTest(const FString& Parameters)
 {
 
@@ -11,7 +11,7 @@ bool FConstructionTest::RunTest(const FString& Parameters)
 	//TODO: Stuff
 
 	return true;
-}*/
+}
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FPlaceholderTest, "GridTest.Placeholder Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 bool FPlaceholderTest::RunTest(const FString& Parameters)
