@@ -23,8 +23,8 @@ bool FSpawnTest::RunTest(const FString& Parameters)
 {
 
 	//Set spawning parameters
-	FVector MyLocation(0, 0, 0);
-	FRotator MyRotation(0, 0, 0);
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
 	FActorSpawnParameters SpawnInfo;
 
 	//Create a blank world to spawn our actor in
@@ -44,6 +44,10 @@ bool FSpawnTest::RunTest(const FString& Parameters)
 	{
 		return false;
 	}
+	if (TestGrid->GetGridOrigin() != MyLocation)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -53,8 +57,8 @@ bool FSpawnTestSquare::RunTest(const FString& Parameters)
 {
 
 	//Set spawning parameters
-	FVector MyLocation(0, 0, 0);
-	FRotator MyRotation(0, 0, 0);
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
 	FActorSpawnParameters SpawnInfo;
 
 	//Create a blank world to spawn our actor in
@@ -71,6 +75,10 @@ bool FSpawnTestSquare::RunTest(const FString& Parameters)
 
 	//Check the object was constructed properly
 	if (!IsValid(TestGrid))
+	{
+		return false;
+	}
+	if (TestGrid->GetGridOrigin() != MyLocation)
 	{
 		return false;
 	}
@@ -83,18 +91,15 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 {
 
 	//Set spawning parameters
-	FVector MyLocation(0, 0, 0);
-	FRotator MyRotation(0, 0, 0);
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
 	FActorSpawnParameters SpawnInfo;
 
 	//Create a blank world to spawn our actor in
 	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
 
 	//Check the map was created properly
-	if (!IsValid(World))
-	{
-		return false;
-	}
+	if (!IsValid(World)) { return false; }
 
 	//Construct a AGrid object
 	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
@@ -104,9 +109,16 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	{
 		return false;
 	}
+	if (TestGrid->GetGridOrigin() != MyLocation)
+	{
+		return false;
+	}
 
-	//Check the parameters of the square grid
+	//Add a tile to the grid
+	TestGrid->AddTile(0, 0, 1);
 
+	//Check the addition happened properly
+	
 
 	return true;
 }
