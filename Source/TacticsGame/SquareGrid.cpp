@@ -200,7 +200,7 @@ void ASquareGrid::AddNullTile(int x, int y, int z)
 
 		//Remove unneessary tiles from the end
 		int k = Grid.Num() - 1;
-		while (Grid[k] == NULL_VECTOR)
+		while (Grid.IsValidIndex(k) && Grid[k] == NULL_VECTOR)
 		{
 			Grid.RemoveAt(k);
 			k = k - 1;
@@ -221,27 +221,69 @@ void ASquareGrid::AddNullTile(int x, int y, int z)
 
 void ASquareGrid::RemoveTile(int x, int y, int z)
 {
+	//NOTE: Removing a tile eliminates it from the grid completely. Nullifying a tile replaces a tile with NULL_VECTOR
+	UE_LOG(LogTemp, Warning, TEXT("Removing tile at: %d, %d, %d"), x, y, z);
 	int Index = CoordToIndex(x, y, z);
 
-	//If the tile is is within bounds, remove it and resize the grid (regardless of if it is null or not)
+	//If the tile is is within bounds, and it isn't a NULL_VECTOR, remove it and resize the grid
 	if (Index < Grid.Num())
 	{
-		//We do this by swapping repeatedly, then popping
-		while (Index < Grid.Num() - 1)
+		if (Grid[Index] != NULL_VECTOR)
 		{
-			Grid.Swap(Index, Index + 1);
-			Index++;
+			//We do this by swapping repeatedly, then popping
+			/*while (Index < Grid.Num() - 1)
+			{
+				Grid.Swap(Index, Index + 1);
+				Index++;
+			}
+			Grid.Pop();*/
+
+			//Nullify the tile
+			Grid[Index] = NULL_VECTOR;
+
+			//Remove unneessary tiles from the end
+			if (Grid.Num() > 0)
+			{
+				int k = Grid.Num() - 1;
+				while (Grid.IsValidIndex(k) && Grid[k] == NULL_VECTOR)
+				{
+					Grid.RemoveAt(k);
+					k = k - 1;
+				}
+			}
+
+			//Move all existing tiles to where their new spots are
+			for (int i = 0; i < Grid.Num(); i++)
+			{
+				if (Grid[i] != NULL_VECTOR)
+				{
+					//Recursively swaps positions that are in the way of each other until the order is correct
+					RecursiveSwap(i);
+				}
+			}
+
+			//Readjust the grid sizes
+			//UpdateAllSizes();
+
+
 		}
-		Grid.Pop();
 
 	}
 	//If the tile is outside the grid bounds, do nothing
 	else
 	{
-
+		UE_LOG(LogTemp, Warning, TEXT("Nothing to remove here; this is outside the bounds of the grid or is a NULL_VECTOR"));
 	}
 
+	//Check the grid itself
+	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
+	}
 	UpdateAllSizes();
+
+
 }
 
 void ASquareGrid::NullifyTile(int x, int y, int z)
@@ -318,6 +360,7 @@ int ASquareGrid::GetSizeZ() const { return SizeZ; }
 
 void ASquareGrid::SetSizeX(int NewSizeX)
 {
+	SizeX = NewSizeX;
 	/* TODO */
 }
 
@@ -373,9 +416,16 @@ void ASquareGrid::UpdateSizeX()
 	float LengthX = LargestCoordInX - GetGridOrigin().X;
 
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
-	SetSizeX(round(LengthX / GetTileLength()) + 1);
+	if (Grid.Num() == 0)
+	{
+		SizeX = 0;
+	}
+	else
+	{
+		SizeX = round(LengthX / GetTileLength()) + 1;
+	}
 
-	UE_LOG(LogTemp, Warning, TEXT("New Size X is %d"), GetSizeX());
+	UE_LOG(LogTemp, Warning, TEXT("New Size X is %d"), SizeX);
 
 }
 
@@ -401,9 +451,16 @@ void ASquareGrid::UpdateSizeY()
 	UE_LOG(LogTemp, Warning, TEXT("WidthY = %f"), WidthY);
 	UE_LOG(LogTemp, Warning, TEXT("Tile Width = %f"), GetTileWidth());
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
-	SetSizeY(round(WidthY / GetTileWidth()) + 1);
+	if (Grid.Num() == 0)
+	{
+		SizeY = 0;
+	}
+	else
+	{
+		SizeY = round(WidthY / GetTileWidth()) + 1;
+	}
 
-	UE_LOG(LogTemp, Warning, TEXT("New Size Y is %d"), GetSizeY());
+	UE_LOG(LogTemp, Warning, TEXT("New Size Y is %d"), SizeY);
 }
 
 void ASquareGrid::UpdateSizeZ()
@@ -426,9 +483,16 @@ void ASquareGrid::UpdateSizeZ()
 	float HeightZ = LargestCoordInZ - GetGridOrigin().Z;
 
 	//Update accordingly. Also it's probably a good idea to check for rounding errors here, which is why we're using round
-	SetSizeZ(round(HeightZ / GetTileHeight()) + 1);
+	if (Grid.Num() == 0)
+	{
+		SizeZ = 0;
+	}
+	else
+	{
+		SizeZ = round(HeightZ / GetTileHeight()) + 1;
+	}
 
-	UE_LOG(LogTemp, Warning, TEXT("New Size Z is %d"), GetSizeZ());
+	UE_LOG(LogTemp, Warning, TEXT("New Size Z is %d"), SizeZ);
 
 }
 
