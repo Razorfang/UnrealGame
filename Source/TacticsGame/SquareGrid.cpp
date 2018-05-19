@@ -148,7 +148,7 @@ void ASquareGrid::AddTile(int x, int y, int z)
 	}
 }
 
-void ASquareGrid::AddNullTile(int x, int y, int z)
+/*void ASquareGrid::AddNullTile(int x, int y, int z)
 {
 	FVector GridOrigin = GetGridOrigin();
 	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
@@ -216,7 +216,7 @@ void ASquareGrid::AddNullTile(int x, int y, int z)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}
-}
+}*/
 
 
 void ASquareGrid::RemoveTile(int x, int y, int z)
@@ -230,13 +230,6 @@ void ASquareGrid::RemoveTile(int x, int y, int z)
 	{
 		if (Grid[Index] != NULL_VECTOR)
 		{
-			//We do this by swapping repeatedly, then popping
-			/*while (Index < Grid.Num() - 1)
-			{
-				Grid.Swap(Index, Index + 1);
-				Index++;
-			}
-			Grid.Pop();*/
 
 			//Nullify the tile
 			Grid[Index] = NULL_VECTOR;
@@ -261,11 +254,6 @@ void ASquareGrid::RemoveTile(int x, int y, int z)
 					RecursiveSwap(i);
 				}
 			}
-
-			//Readjust the grid sizes
-			//UpdateAllSizes();
-
-
 		}
 
 	}
@@ -281,6 +269,7 @@ void ASquareGrid::RemoveTile(int x, int y, int z)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}
+	//Update the grid sizes
 	UpdateAllSizes();
 
 

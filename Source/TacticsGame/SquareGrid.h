@@ -25,8 +25,8 @@ public:
 		void AddTile(int x, int y, int z);
 
 	/*Add a tile to the grid at a specified point in space*/
-	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void AddNullTile(int x, int y, int z);
+	/*UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+		void AddNullTile(int x, int y, int z);*/
 
 	/*Remove a tile from the grid, if it exists. This means adjusting the grid*/
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
