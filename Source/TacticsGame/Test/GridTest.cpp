@@ -104,6 +104,8 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	//Construct a AGrid object
 	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
 
+	UE_LOG(LogTemp, Warning, TEXT("Grid Origin is (%f, %f, %f)"), TestGrid->GetGridOrigin().X, TestGrid->GetGridOrigin().Y, TestGrid->GetGridOrigin().Z);
+
 	//Check the object was constructed properly
 	if (!IsValid(TestGrid))
 	{
@@ -118,6 +120,16 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	TestGrid->AddTile(0, 0, 1);
 
 	//Check the addition happened properly
+	if (TestGrid->GetSizeX() != 1 && TestGrid->GetSizeY() != 1 && TestGrid->GetSizeZ() != 2)
+	{
+		return false;
+	}
+
+	TestGrid->AddTile(1, 1, 0);
+	if (TestGrid->GetSizeX() != 2 && TestGrid->GetSizeY() != 2 && TestGrid->GetSizeZ() != 2)
+	{
+		return false;
+	}
 	
 
 	return true;

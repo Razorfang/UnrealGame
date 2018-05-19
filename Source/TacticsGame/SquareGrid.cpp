@@ -23,9 +23,6 @@ ASquareGrid::ASquareGrid()
 
 	//UE_LOG(LogTemp, Warning, TEXT("The origin is %f,%f,%f"), GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z);
 
-	/*Resize the grid appropriately*/
-	Grid.Init(GetGridOrigin(), 1);
-
 	/*Set the cell mesh here. For now, we will use the Plane mesh.*/
 	//GridMesh->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane"));
@@ -45,9 +42,21 @@ ASquareGrid::ASquareGrid()
 
 int ASquareGrid::CoordToIndex(int x, int y, int z) const
 {
-	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (SizeX * SizeY) * z + (SizeX)* y + x);
-	/* If you need to understand this equation, please email me and I'll send a scan of my equations */
-	return (SizeX * SizeY) * z + (SizeX)* y + x;
+
+	/*If this vector falls outside the current grid, we need to get future sizes to update correctly
+	This means doing some checking
+	Although we need new sizes, we aren't updating them right now*/
+	int newSizeX = SizeX;
+	int newSizeY = SizeY;
+	int newSizeZ = SizeZ;
+
+	if (x >= SizeX) { newSizeX = x + 1; };
+	if (y >= SizeY) { newSizeY = y + 1; };
+	if (z >= SizeZ) { newSizeZ = z + 1; };
+
+	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (newSizeX * newSizeY) * z + (newSizeX)* y + x);
+
+	return (newSizeX * newSizeY) * z + (newSizeX)* y + x;
 }
 
 void ASquareGrid::AddTile(int x, int y, int z)
@@ -56,37 +65,79 @@ void ASquareGrid::AddTile(int x, int y, int z)
 	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
 
+	UE_LOG(LogTemp, Warning, TEXT("NULL_VECTOR: %f, %f, %f"), NULL_VECTOR.X, NULL_VECTOR.Y, NULL_VECTOR.Z);
+
 	int index = CoordToIndex(x, y, z);
 
-	//If we're adding a tile outside the current grid, we add the new vector, then fill in the gaps with null vectors
-	if (index >= Grid.Num())
+	//If we're adding a tile within bounds, then we're always overwriting an existing tile, null or not
+	if (x < SizeX && y < SizeY && z < SizeZ) 
 	{
-		//Add more null vectors as needed
-		for (int i = 0; i < (index - Grid.Num()); i++)
+		if (Grid[index] == NULL_VECTOR)
+		{
+			Grid[index] = NewTile;
+			UE_LOG(LogTemp, Warning, TEXT("Overwriting null vector with new tile"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Valid tile at that index, no reason to add"));
+		}
+	}
+	else
+	{
+		//Tile outside of bounds, need to do complex stuff
+
+		//Readjust the grid sizes
+		if (x >= SizeX) { SizeX = x + 1; }
+		if (y >= SizeY) { SizeY = y + 1; }
+		if (z >= SizeZ) { SizeZ = z + 1; }
+
+		//Resize the grid appropriately, by adding more nulls on the end
+		//Grid.SetNum(SizeX * SizeY * SizeZ);
+		for (int j = Grid.Num(); j < (SizeX * SizeY * SizeZ); j++)
 		{
 			Grid.Add(NULL_VECTOR);
 		}
-		Grid.Add(NewTile);
+
+		//Move all existing tiles to where their new spots are
+		for (int i = 0; i < Grid.Num(); i++)
+		{
+			if (Grid[i] != NULL_VECTOR)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is not NULL_VECTOR"), i);
+
+				//Since CoordToIndex checks where the coordinate should be in the current grid, we can use it to detect where changes should happen
+				int NewIndex = CoordToIndex(Grid[i].X, Grid[i].Y, Grid[i].Z);
+
+				UE_LOG(LogTemp, Warning, TEXT("New index is %d"), NewIndex);
+
+				//New location is occupied by NULL_VECTOR, so swap them around
+				Grid.Swap(i, NewIndex);
+			}
+		}
+
+		//Put the new tile in its place
+		Grid[index] = NewTile;
+
+		//Remove unneessary tiles from the end
+		int k = Grid.Num() - 1;
+		while (Grid[k] == NULL_VECTOR)
+		{
+			Grid.RemoveAt(k);
+			k = k - 1;
+		}
 
 		UE_LOG(LogTemp, Warning, TEXT("Adding tile to the end of the grid and filling in space"));
+
 	}
 
-	//If there is a null vector there, then we overwrite it
-	else if (Grid[index] == NULL_VECTOR)
+	//Check the grid itself
+	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
+	for (int i = 0; i < Grid.Num(); i++)
 	{
-		Grid.Insert(NewTile, index); //Does this resize? Does this overwrite? It probably overwrites and probably doesn't resize
-
-		UE_LOG(LogTemp, Warning, TEXT("Overwriting null vector with new tile"));
-
+		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}
 
-	else
-	{
-		//If there is another tile at the index, then we should leave it be
-		UE_LOG(LogTemp, Warning, TEXT("Valid tile at that index, no reason to add"));
-	}
-
-	UpdateAllSizes(); //While it may not be necessary to update all dimensions after only one tile is added, I'm not taking any chances
+	//UpdateAllSizes(); //While it may not be necessary to update all dimensions after only one tile is added, I'm not taking any chances
 }
 
 void ASquareGrid::AddNullTile(int x, int y, int z)
@@ -256,7 +307,7 @@ void ASquareGrid::SetSizeZ(int NewSizeZ)
 void ASquareGrid::UpdateSizeX()
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Updating Size X"));
+	UE_LOG(LogTemp, Warning, TEXT("Old Size X is %d"), GetSizeX());
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInX = GetGridOrigin().X;
@@ -264,7 +315,7 @@ void ASquareGrid::UpdateSizeX()
 	//Iterate through all of the locations, checking for the largest X
 	for (int i = 0; i < Grid.Num(); i++)
 	{
-		if (Grid[i].X > LargestCoordInX)
+		if (Grid[i].X > LargestCoordInX && Grid[i] != NULL_VECTOR)
 		{
 			LargestCoordInX = Grid[i].X;
 		}
@@ -281,7 +332,7 @@ void ASquareGrid::UpdateSizeX()
 
 void ASquareGrid::UpdateSizeY()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Updating Size Y"));
+	UE_LOG(LogTemp, Warning, TEXT("Old Size Y is %d"), GetSizeY());
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInY = GetGridOrigin().Y;
@@ -289,7 +340,7 @@ void ASquareGrid::UpdateSizeY()
 	//Iterate through all of the locations, checking for the largest X
 	for (int i = 0; i < Grid.Num(); i++)
 	{
-		if (Grid[i].Y > LargestCoordInY)
+		if (Grid[i].Y > LargestCoordInY && Grid[i] != NULL_VECTOR)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Grid[i] = %f"), Grid[i].Y);
 			LargestCoordInY = Grid[i].Y;
@@ -309,7 +360,7 @@ void ASquareGrid::UpdateSizeY()
 void ASquareGrid::UpdateSizeZ()
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Updating Size Z"));
+	UE_LOG(LogTemp, Warning, TEXT("Old Size Z is %d"), GetSizeZ());
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInZ = GetGridOrigin().Z;
@@ -317,7 +368,7 @@ void ASquareGrid::UpdateSizeZ()
 	//Iterate through all of the locations, checking for the largest X
 	for (int i = 0; i < Grid.Num(); i++)
 	{
-		if (Grid[i].Z > LargestCoordInZ)
+		if (Grid[i].Z > LargestCoordInZ && Grid[i] != NULL_VECTOR)
 		{
 			LargestCoordInZ = Grid[i].Z;
 		}
