@@ -130,6 +130,12 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	{
 		return false;
 	}
+
+	TestGrid->AddTile(2, 2, 2);
+	if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3)
+	{
+		return false;
+	}
 	
 
 	return true;

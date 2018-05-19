@@ -88,4 +88,6 @@ private:
 	void UpdateSizeY();
 	void UpdateSizeZ();
 	void UpdateAllSizes();
+
+	void RecursiveSwap(int i);
 };

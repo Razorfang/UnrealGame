@@ -59,13 +59,30 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 	return (newSizeX * newSizeY) * z + (newSizeX)* y + x;
 }
 
+void ASquareGrid::RecursiveSwap(int i)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is not NULL_VECTOR"), i);
+
+	//Since CoordToIndex checks where the coordinate should be in the current grid, we can use it to detect where changes should happen
+	int NewIndex = CoordToIndex(Grid[i].X, Grid[i].Y, Grid[i].Z);
+
+	UE_LOG(LogTemp, Warning, TEXT("New index is %d"), NewIndex);
+
+	//Swap elements
+	Grid.Swap(i, NewIndex);
+
+	//If grid[i] is NULL_VECTOR, or the newindex an oldindex are the same, we are done. Otherwise, we repeat this swapping with the thing we just swapped
+	if ((Grid[i] != NULL_VECTOR) && (NewIndex != i))
+	{
+		RecursiveSwap(i);
+	}
+}
+
 void ASquareGrid::AddTile(int x, int y, int z)
 {
 	FVector GridOrigin = GetGridOrigin();
 	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
-
-	UE_LOG(LogTemp, Warning, TEXT("NULL_VECTOR: %f, %f, %f"), NULL_VECTOR.X, NULL_VECTOR.Y, NULL_VECTOR.Z);
 
 	int index = CoordToIndex(x, y, z);
 
@@ -103,15 +120,18 @@ void ASquareGrid::AddTile(int x, int y, int z)
 		{
 			if (Grid[i] != NULL_VECTOR)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is not NULL_VECTOR"), i);
+				/*UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is not NULL_VECTOR"), i);
 
 				//Since CoordToIndex checks where the coordinate should be in the current grid, we can use it to detect where changes should happen
 				int NewIndex = CoordToIndex(Grid[i].X, Grid[i].Y, Grid[i].Z);
 
 				UE_LOG(LogTemp, Warning, TEXT("New index is %d"), NewIndex);
 
-				//New location is occupied by NULL_VECTOR, so swap them around
-				Grid.Swap(i, NewIndex);
+				//Swap elements
+				Grid.Swap(i, NewIndex);*/
+
+				//If grid[i] is NULL_VECTOR, or the newindex an oldindex are the same, we are done. Otherwise, we repeat this swapping with the thing we just swapped
+				RecursiveSwap(i);
 			}
 		}
 
