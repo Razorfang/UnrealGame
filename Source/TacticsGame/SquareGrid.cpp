@@ -59,6 +59,20 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (newSizeX * newSizeY) * z + (newSizeX)* y + x);
 
 	return (newSizeX * newSizeY) * z + (newSizeX)* y + x;
+
+	/*
+	int relativeX = x - GetGridOrigin().X;
+	int relativeY = y - GetGridOrigin().Y;
+	int relativeZ = z - GetGridOrigin().Z;
+
+	if (relativeX >= SizeX) { newSizeX = relativeX + 1; };
+	if (relativeY >= SizeY) { newSizeY = relativeY + 1; };
+	if (relativeZ >= SizeZ) { newSizeZ = relativeZ + 1; };
+
+	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), relativeX, relativeY, relativeZ, (newSizeX * newSizeY) * relativeZ + (newSizeX)* relativeY + relativeX);
+
+	return (newSizeX * newSizeY) * relativeZ + (newSizeX)* relativeY + relativeX;
+	*/
 }
 
 void ASquareGrid::RecursiveSwap(int i)
@@ -381,13 +395,13 @@ void ASquareGrid::SetTileHeight(float NewHeight)
 	/* TODO: Correct the appearance of the grid mesh */
 }
 
-int ASquareGrid::GetSizeX() const { return SizeX; }
-int ASquareGrid::GetSizeY() const { return SizeY; }
-int ASquareGrid::GetSizeZ() const { return SizeZ; }
+//int ASquareGrid::GetSizeX() const { return SizeX; }
+//int ASquareGrid::GetSizeY() const { return SizeY; }
+//int ASquareGrid::GetSizeZ() const { return SizeZ; }
 
-void ASquareGrid::SetSizeX(int NewSizeX)
+/*void ASquareGrid::SetSizeX(int NewSizeX)
 {
-	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+	//TODO: Resize the grid by adding and removing vectors from the grid array
 
 
 
@@ -412,11 +426,11 @@ void ASquareGrid::SetSizeX(int NewSizeX)
 
 	//Else, the sizes are the same, and we do nothing
 	SizeY = NewSizeX;
-}
+}*/
 
-void ASquareGrid::SetSizeY(int NewSizeY)
+/*void ASquareGrid::SetSizeY(int NewSizeY)
 {
-	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+	// TODO: Resize the grid by adding and removing vectors from the grid array 
 
 
 	//Shrinking
@@ -441,11 +455,11 @@ void ASquareGrid::SetSizeY(int NewSizeY)
 
 	//Else, the sizes are the same, and we do nothing
 	SizeY = NewSizeY;
-}
+}*/
 
-void ASquareGrid::SetSizeZ(int NewSizeZ)
+/*void ASquareGrid::SetSizeZ(int NewSizeZ)
 {
-	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+	// TODO: Resize the grid by adding and removing vectors from the grid array 
 
 	//Shrinking
 	if (NewSizeZ == 0)
@@ -469,12 +483,12 @@ void ASquareGrid::SetSizeZ(int NewSizeZ)
 
 	//Else, the sizes are the same, and we do nothing
 	SizeZ = NewSizeZ;
-}
+}*/
 
 void ASquareGrid::UpdateSizeX()
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Old Size X is %d"), GetSizeX());
+	UE_LOG(LogTemp, Warning, TEXT("Old Size X is %d"), SizeX);
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInX = GetGridOrigin().X;
@@ -506,7 +520,7 @@ void ASquareGrid::UpdateSizeX()
 
 void ASquareGrid::UpdateSizeY()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Old Size Y is %d"), GetSizeY());
+	UE_LOG(LogTemp, Warning, TEXT("Old Size Y is %d"), SizeY);
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInY = GetGridOrigin().Y;
@@ -541,7 +555,7 @@ void ASquareGrid::UpdateSizeY()
 void ASquareGrid::UpdateSizeZ()
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Old Size Z is %d"), GetSizeZ());
+	UE_LOG(LogTemp, Warning, TEXT("Old Size Z is %d"), SizeZ);
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInZ = GetGridOrigin().Z;

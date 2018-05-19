@@ -55,7 +55,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 		void SetTileHeight(float NewHeight);
 
-	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	/*UFUNCTION(BlueprintPure, Category = "SquareGrid")
 		int GetSizeX() const;
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
 		int GetSizeY() const;
@@ -66,7 +66,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 		void SetSizeY(int NewSizeY);
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void SetSizeZ(int NewSizeZ);
+		void SetSizeZ(int NewSizeZ);*/
 
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
 		int GetNumSpaces() const;

@@ -123,10 +123,10 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	}
 
 
-	if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
+	/*if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
 	{
 		return false;
-	}
+	}*/
 	
 
 	return true;
@@ -167,10 +167,10 @@ bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
 		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}
 
-	if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
+	/*if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
 	{
 		return false;
-	}
+	}*/
 
 	//Remove these tiles one at a time, starting from the end
 	for (int i = 26; i >= 0; i--)
@@ -178,10 +178,10 @@ bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
 		TestGrid->RemoveTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}
 
-	if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
+	/*if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
 	{
 		return false;
-	}
+	}*/
 
 	return true;
 
@@ -222,10 +222,10 @@ bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
 		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}
 
-	if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
+	/*if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
 	{
 		return false;
-	}
+	}*/
 
 	//Nullify each tile, until everything is gone. This should have the same effect as removing since we are nullifying the end
 	for (int i = 26; i >= 0; i--)
@@ -233,10 +233,10 @@ bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
 		TestGrid->NullifyTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}
 
-	if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
+	/*if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
 	{
 		return false;
-	}
+	}*/
 
 	return true;
 
