@@ -36,6 +36,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 		void NullifyTile(int x, int y, int z);
 
+	/* Initialize a grid full of tiles, with dimensions X, Y, Z. Most common application. 
+	Should only be called whenever the grid is first constructed */
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+		void InitTiles(int length, int width, int height);
+
 	/* Width is Y, Length is X, Height is Z */
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
 		float GetTileWidth() const;

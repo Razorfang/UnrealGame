@@ -36,6 +36,8 @@ ASquareGrid::ASquareGrid()
 
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Square grid initialized. TW,TL,TH,SX,SY,SZ,origin: %f,%f,%f,%d,%d,%d,(%f %f %f)"), TileWidth, TileLength, TileHeight, SizeX, SizeY, SizeZ, GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z));
 
+		//Set the mobility of the grid to immoble
+		GridMesh->SetMobility(EComponentMobility::Stationary);
 
 	}
 }
@@ -318,6 +320,20 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 	}
 }
 
+void ASquareGrid::InitTiles(int length, int width, int height)
+{
+	for (int i = 0; i < length; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			for (int k = 0; k < height; k++)
+			{
+				AddTile(i, j, k);
+			}
+		}
+	}
+}
+
 float ASquareGrid::GetTileWidth() const { return TileWidth; }
 float ASquareGrid::GetTileLength() const { return TileLength; }
 float ASquareGrid::GetTileHeight() const { return TileHeight; }
@@ -371,13 +387,44 @@ int ASquareGrid::GetSizeZ() const { return SizeZ; }
 
 void ASquareGrid::SetSizeX(int NewSizeX)
 {
-	SizeX = NewSizeX;
-	/* TODO */
+	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+
+
+
+	//Shrinking
+	if (NewSizeX == 0)
+	{
+		//Delete the grid
+		Grid.Empty();
+	}
+
+	else if (NewSizeX < SizeX)
+	{
+		//Removing elements
+	}
+
+	//Growing
+	else if (NewSizeX > SizeX)
+	{
+		//Adding more null vectors
+
+	}
+
+	//Else, the sizes are the same, and we do nothing
+	SizeY = NewSizeX;
 }
 
 void ASquareGrid::SetSizeY(int NewSizeY)
 {
 	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+
+
+	//Shrinking
+	if (NewSizeY == 0)
+	{
+		//Delete the grid
+		Grid.Empty();
+	}
 
 	//Shrinking
 	if (NewSizeY < SizeY)
@@ -393,18 +440,35 @@ void ASquareGrid::SetSizeY(int NewSizeY)
 	}
 
 	//Else, the sizes are the same, and we do nothing
-
 	SizeY = NewSizeY;
-
-
-
-	//Since updating the sizes is already done by the AddTile function, we don't need to do it here
 }
 
 void ASquareGrid::SetSizeZ(int NewSizeZ)
 {
+	/* TODO: Resize the grid by adding and removing vectors from the grid array */
+
+	//Shrinking
+	if (NewSizeZ == 0)
+	{
+		//Delete the grid
+		Grid.Empty();
+	}
+
+	//Shrinking
+	if (NewSizeZ < SizeZ)
+	{
+		//Removing elements
+	}
+
+	//Growing
+	else if (NewSizeZ > SizeZ)
+	{
+		//Adding more null vectors
+
+	}
+
+	//Else, the sizes are the same, and we do nothing
 	SizeZ = NewSizeZ;
-	/* TODO */
 }
 
 void ASquareGrid::UpdateSizeX()
