@@ -277,6 +277,8 @@ void ASquareGrid::RemoveTile(int x, int y, int z)
 
 void ASquareGrid::NullifyTile(int x, int y, int z)
 {
+	//Nullifying certain tiles will cause the grid to be resized, similar to RemoveTile
+
 	int Index = CoordToIndex(x, y, z);
 
 	/* Within grid bounds */
@@ -285,15 +287,35 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 		//If the tile is non-null, turn it null
 		if (Grid[Index] != NULL_VECTOR)
 		{
-			Grid.Insert(NULL_VECTOR, Index);
+			//Nullify the tile
+			Grid[Index] = NULL_VECTOR;
+
+			//Remove unneessary tiles from the end
+			if (Grid.Num() > 0)
+			{
+				int k = Grid.Num() - 1;
+				while (Grid.IsValidIndex(k) && Grid[k] == NULL_VECTOR)
+				{
+					Grid.RemoveAt(k);
+					k = k - 1;
+				}
+			}
+
+			//Update the grid sizes
+			UpdateAllSizes();
 		}
 
 		//If the tile is null, do nothing
 	}
 
-	//If outside the bounds of the grid, throw a warning, saying to use AddNull instead (TODO)
+	//If outside the bounds of the grid, do nothing
 
-	UpdateAllSizes();
+	//Check the grid itself
+	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
+	}
 }
 
 float ASquareGrid::GetTileWidth() const { return TileWidth; }

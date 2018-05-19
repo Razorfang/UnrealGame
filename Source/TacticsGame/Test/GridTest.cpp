@@ -186,3 +186,58 @@ bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
 	return true;
 
 }
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNullifyTileTestSquare, "GridTest.SquareGrid.Nullify Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
+{
+	//Set spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World)) { return false; }
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	UE_LOG(LogTemp, Warning, TEXT("Grid Origin is (%f, %f, %f)"), TestGrid->GetGridOrigin().X, TestGrid->GetGridOrigin().Y, TestGrid->GetGridOrigin().Z);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		return false;
+	}
+	if (TestGrid->GetGridOrigin() != MyLocation)
+	{
+		return false;
+	}
+
+	//Add 27 tiles one at a time to fill a 3x3x3 cube
+	for (int i = 0; i < 27; i++)
+	{
+		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
+	}
+
+	if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
+	{
+		return false;
+	}
+
+	//Nullify each tile, until everything is gone. This should have the same effect as removing since we are nullifying the end
+	for (int i = 26; i >= 0; i--)
+	{
+		TestGrid->NullifyTile(i % 3, (i / 3) % 3, (i / 9) % 3);
+	}
+
+	if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
+	{
+		return false;
+	}
+
+	return true;
+
+}
