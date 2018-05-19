@@ -21,7 +21,7 @@ ASquareGrid::ASquareGrid()
 	SizeY = 1;
 	SizeZ = 1; //2D grids, such as an 8x8 chess board, have a height of 1 in this system
 
-	UE_LOG(LogTemp, Warning, TEXT("The origin is %f,%f,%f"), GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z);
+	//UE_LOG(LogTemp, Warning, TEXT("The origin is %f,%f,%f"), GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z);
 
 	/*Resize the grid appropriately*/
 	Grid.Init(GetGridOrigin(), 1);
@@ -36,6 +36,9 @@ ASquareGrid::ASquareGrid()
 		/*Set the mesh location so that it is located at the only cell
 		TODO: Check if we want the point to be the middle or the bottom-left corner
 		This is just a test*/
+
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Square grid initialized. TW,TL,TH,SX,SY,SZ,origin: %f,%f,%f,%d,%d,%d,(%f %f %f)"), TileWidth, TileLength, TileHeight, SizeX, SizeY, SizeZ, GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z));
+
 
 	}
 }

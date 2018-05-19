@@ -12,6 +12,11 @@ public class TacticsGame : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
+        if (Target.Type == TargetRules.TargetType.Editor)
+        {
+            PublicDependencyModuleNames.AddRange(new string[] { "UnrealEd", "EngineSettings" });
+        }
+
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 		
