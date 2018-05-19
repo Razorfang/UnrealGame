@@ -63,6 +63,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 		void SetSizeZ(int NewSizeZ);
 
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+		int GetNumSpaces() const;
+
 
 private:
 	/* Used to determine how wide this grid is. This is what we multiply by to translate cartesian to world. Used to scale Y */

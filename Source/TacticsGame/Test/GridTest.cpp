@@ -116,23 +116,14 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 		return false;
 	}
 
-	//Add a tile to the grid
-	TestGrid->AddTile(0, 0, 1);
-
-	//Check the addition happened properly
-	if (TestGrid->GetSizeX() != 1 && TestGrid->GetSizeY() != 1 && TestGrid->GetSizeZ() != 2)
+	//Add 27 tiles one at a time to fill a 3x3x3 cube
+	for (int i = 0; i < 27; i++)
 	{
-		return false;
+		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}
 
-	TestGrid->AddTile(1, 1, 0);
-	if (TestGrid->GetSizeX() != 2 && TestGrid->GetSizeY() != 2 && TestGrid->GetSizeZ() != 2)
-	{
-		return false;
-	}
 
-	TestGrid->AddTile(2, 2, 2);
-	if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3)
+	if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
 	{
 		return false;
 	}
