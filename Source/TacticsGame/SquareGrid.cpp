@@ -67,14 +67,19 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 
 	return (SizeX * SizeY) * z + (SizeX)* y + x;*/
 
-
+	return 0;
 
 }
 
 
 bool ASquareGrid::IsWithinBounds(int x, int y, int z) const
 {
-	return false;
+	if (x >= SizeX || y >= SizeY || z >= SizeZ)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 FVector ASquareGrid::CoordToWorld(int x, int y, int z) const
@@ -87,7 +92,7 @@ FVector ASquareGrid::CoordToWorld(int x, int y, int z) const
 
 void ASquareGrid::RecursiveSwap(int i)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is not NULL_VECTOR"), i);
+	/*UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is not NULL_VECTOR"), i);
 
 	//Since CoordToIndex checks where the coordinate should be in the current grid, we can use it to detect where changes should happen
 	int NewIndex = CoordToIndex(Grid[i].X, Grid[i].Y, Grid[i].Z);
@@ -101,55 +106,100 @@ void ASquareGrid::RecursiveSwap(int i)
 	if ((Grid[i] != NULL_VECTOR) && (NewIndex != i))
 	{
 		RecursiveSwap(i);
-	}
+	}*/
 }
 
 void ASquareGrid::InitTiles(int length, int width, int height)
 {
-	SizeX = length;
-	SizeY = width;
-	SizeZ = height;
 
-	for (int z = 0; z < SizeZ; z++)
+	if (Grid.Num() == 0)
 	{
-		for (int y = 0; y < SizeY; y++)
+		SizeX = length;
+		SizeY = width;
+		SizeZ = height;
+
+		for (int z = 0; z < SizeZ; z++)
 		{
-			for (int x = 0; x < SizeX; x++)
+			for (int y = 0; y < SizeY; y++)
 			{
-				//We iterate through x first, then y, then z, so we append in the correct order
-				Grid.Add(CoordToWorld(x, y, z));
+				for (int x = 0; x < SizeX; x++)
+				{
+					//We iterate through x first, then y, then z, so we append in the correct order
+					Grid.Add(CoordToWorld(x, y, z));
+				}
 			}
 		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Please don't call this function if the grid is non-empty"));
+	}
+
+	//Check the grid itself
+	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}
 }
 
 void ASquareGrid::AddTile(int x, int y, int z)
 {
 	FVector GridOrigin = GetGridOrigin();
-	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
+	FVector NewTile = CoordToWorld(x, y, z);
 	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
 
-	//If adding a tile within bounds
-	//If it's NULL_VECTOR, overwrite it. Otherwise, do nothing
-
-
-
-
-	/*int index = CoordToIndex(x, y, z);
-
-	//If we're adding a tile within bounds, then we're always overwriting an existing tile, null or not
-	if (x < SizeX && y < SizeY && z < SizeZ && index < Grid.Num()) 
+	//If the grid is empty, then we add a bunch of null tiles appropriately
+	if (Grid.Num() == 0)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Grid is empty. Populating now."));
+		//i.e. we fill a grid with exactly the right number of null tiles minus one, then we add this to the end
+		SizeX = x + 1;
+		SizeY = y + 1;
+		SizeZ = z + 1;
+
+		for (int i = 0; i < (SizeX * SizeY * SizeZ) - 1; i++)
+		{
+			Grid.Add(NULL_VECTOR);
+		}
+		Grid.Add(NewTile);
+	}
+
+	//If adding a tile within bounds
+	else if (IsWithinBounds(x, y, z))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Tile we want to add is within bounds"));
+
+		//We can calculate the index better if we're in bounds
+		int index = (SizeX * SizeY) * z + (SizeX)* y + x;
+
+		//If it's NULL_VECTOR, overwrite it. 
 		if (Grid[index] == NULL_VECTOR)
 		{
 			Grid[index] = NewTile;
-			UE_LOG(LogTemp, Warning, TEXT("Overwriting null vector with new tile"));
 		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Valid tile at that index, no reason to add"));
-		}
+
+		//Otherwise, do nothing
 	}
+
+	//If it's outside of bounds, then we need to resize the grid accordingly. This is the tricky part
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Tile we want to add is out of bounds. We will not implement this at this time"));
+
+		//Readjust the grid sizes
+
+		//Resize the grid appropriately
+
+		//Move all tiles to new spots
+
+		//Put new tile in its place
+
+		//Remove unnecessary tiles from the end
+
+	}
+
+	/*
 	else
 	{
 		//Tile outside of bounds, need to do complex stuff
@@ -189,77 +239,7 @@ void ASquareGrid::AddTile(int x, int y, int z)
 
 		UE_LOG(LogTemp, Warning, TEXT("Adding tile to the end of the grid and filling in space"));
 
-	}
-
-	//Check the grid itself
-	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
-	for (int i = 0; i < Grid.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}*/
-}
-
-/*void ASquareGrid::AddNullTile(int x, int y, int z)
-{
-	FVector GridOrigin = GetGridOrigin();
-	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
-	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
-
-	int index = CoordToIndex(x, y, z);
-
-	//If we're adding a tile within bounds, then we're always overwriting an existing tile, null or not
-	if (x < SizeX && y < SizeY && z < SizeZ)
-	{
-		if (Grid[index] != NULL_VECTOR)
-		{
-			Grid[index] = NewTile;
-			UE_LOG(LogTemp, Warning, TEXT("Overwriting good vector with NULL_VECTOR"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("NULL_VECTOR at that index, no reason to add"));
-		}
-	}
-	else
-	{
-		//Tile outside of bounds, need to do complex stuff
-
-		//Readjust the grid sizes
-		if (x >= SizeX) { SizeX = x + 1; }
-		if (y >= SizeY) { SizeY = y + 1; }
-		if (z >= SizeZ) { SizeZ = z + 1; }
-
-		//Resize the grid appropriately, by adding more nulls on the end
-		//Grid.SetNum(SizeX * SizeY * SizeZ);
-		for (int j = Grid.Num(); j < (SizeX * SizeY * SizeZ); j++)
-		{
-			Grid.Add(NULL_VECTOR);
-		}
-
-		//Move all existing tiles to where their new spots are
-		for (int i = 0; i < Grid.Num(); i++)
-		{
-			if (Grid[i] != NULL_VECTOR)
-			{
-				//Recursively swaps positions that are in the way of each other until the order is correct
-				RecursiveSwap(i);
-			}
-		}
-
-		//Put the new tile in its place
-		Grid[index] = NewTile;
-
-		//Remove unneessary tiles from the end
-		int k = Grid.Num() - 1;
-		while (Grid.IsValidIndex(k) && Grid[k] == NULL_VECTOR)
-		{
-			Grid.RemoveAt(k);
-			k = k - 1;
-		}
-
-		UE_LOG(LogTemp, Warning, TEXT("Adding tile to the end of the grid and filling in space"));
-
-	}
 
 	//Check the grid itself
 	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
@@ -267,7 +247,7 @@ void ASquareGrid::AddTile(int x, int y, int z)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}
-}*/
+}
 
 
 void ASquareGrid::RemoveTile(int x, int y, int z)

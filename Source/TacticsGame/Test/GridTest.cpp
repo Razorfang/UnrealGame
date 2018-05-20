@@ -52,6 +52,55 @@ bool FSpawnTest::RunTest(const FString& Parameters)
 	return true;
 }
 
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FInitTest, "GridTest.SquareGrid.Initialisation Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+bool FInitTest::RunTest(const FString& Parameters)
+{
+
+	//Set spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		return false;
+	}
+	if (TestGrid->GetGridOrigin() != MyLocation)
+	{
+		return false;
+	}
+
+
+	//Do the initialization, and check if it makes the right number of tiles, and also that they are in the correct spot (TODO). Use random numbers between 0 and 99
+	int randX = FMath::Rand() % 100;
+	int randY = FMath::Rand() % 100;
+	int randZ = FMath::Rand() % 100;
+
+	TestGrid->InitTiles(randX, randY, randZ);
+
+	if (TestGrid->GetNumSpaces() != (randX * randY * randZ))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSpawnTestSquare, "GridTest.SquareGrid.Spawn Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FSpawnTestSquare::RunTest(const FString& Parameters)
 {
