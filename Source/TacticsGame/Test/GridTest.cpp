@@ -166,10 +166,12 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	}
 
 	//Add 27 tiles one at a time to fill a 3x3x3 cube
-	for (int i = 0; i < 27; i++)
+	/*for (int i = 0; i < 27; i++)
 	{
 		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
-	}
+	}*/
+
+	//For now we only care about adding within bounds, so we'll 
 
 
 	/*if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
@@ -181,7 +183,7 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	return true;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FRemoveTileTestSquare, "GridTest.SquareGrid.Remove Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+/*IMPLEMENT_SIMPLE_AUTOMATION_TEST(FRemoveTileTestSquare, "GridTest.SquareGrid.Remove Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
 {
 	//Set spawning parameters
@@ -216,10 +218,10 @@ bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
 		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}
 
-	/*if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
-	{
-		return false;
-	}*/
+	//if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
+	//{
+	//	return false;
+	//}
 
 	//Remove these tiles one at a time, starting from the end
 	for (int i = 26; i >= 0; i--)
@@ -227,14 +229,14 @@ bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
 		TestGrid->RemoveTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}
 
-	/*if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
-	{
-		return false;
-	}*/
+	//if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
+	//{
+	//	return false;
+	//}
 
 	return true;
 
-}
+}*/
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNullifyTileTestSquare, "GridTest.SquareGrid.Nullify Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FNullifyTileTestSquare::RunTest(const FString& Parameters)

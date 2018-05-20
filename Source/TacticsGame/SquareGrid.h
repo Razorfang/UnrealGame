@@ -29,13 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 		void AddTile(int x, int y, int z);
 
-	/*Remove a tile from the grid, if it exists. This means adjusting the grid*/
-	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void RemoveTile(int x, int y, int z);
-
 	/*Turn a tile into a null vector*/
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void NullifyTile(int x, int y, int z);
+		void NullifyTile(int x, int y, int z); ///
 
 
 
@@ -96,10 +92,10 @@ private:
 	FVector CoordToWorld(int x, int y, int z) const; ///
 
 	/* To be called after a tile as added or removed from the grid, so that we have it correct*/
-	void UpdateSizeX();
-	void UpdateSizeY();
-	void UpdateSizeZ();
-	void UpdateAllSizes();
+	void UpdateSizeX(); ///
+	void UpdateSizeY(); ///
+	void UpdateSizeZ(); ///
+	void UpdateAllSizes(); ///
 
 	void RecursiveSwap(int i);
 };
