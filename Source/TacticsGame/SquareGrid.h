@@ -93,6 +93,12 @@ private:
 	/* Converts an (x,y,z) point into an index for the Grid array */
 	int CoordToIndex(int x, int y, int z) const;
 
+	/* Checks if (x,y,z) is within the bounds of the grid */
+	bool IsWithinBounds(int x, int y, int z) const;
+
+	/* Constructs the vector that should go at the coordinate (x,y,z) */
+	FVector CoordToWorld(int x, int y, int z) const;
+
 	/* To be called after a tile as added or removed from the grid, so that we have it correct*/
 	void UpdateSizeX();
 	void UpdateSizeY();

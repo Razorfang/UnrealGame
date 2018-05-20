@@ -48,7 +48,7 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 	/*If this vector falls outside the current grid, we need to get future sizes to update correctly
 	This means doing some checking
 	Although we need new sizes, we aren't updating them right now*/
-	int newSizeX = SizeX;
+	/*int newSizeX = SizeX;
 	int newSizeY = SizeY;
 	int newSizeZ = SizeZ;
 
@@ -58,8 +58,31 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 
 	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (newSizeX * newSizeY) * z + (newSizeX)* y + x);
 
-	return (newSizeX * newSizeY) * z + (newSizeX)* y + x;
+	return (newSizeX * newSizeY) * z + (newSizeX)* y + x;*/
 
+	//If the new coordinate exists outside the grid, then we need to check for that outside this function, not inside it.
+	//Checking inside not only causes issues, but also goes against functional programming principles.
+
+	/*UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), x, y, z, (SizeX * SizeY) * z + (SizeX)* y + x);
+
+	return (SizeX * SizeY) * z + (SizeX)* y + x;*/
+
+
+
+}
+
+
+bool ASquareGrid::IsWithinBounds(int x, int y, int z) const
+{
+	return false;
+}
+
+FVector ASquareGrid::CoordToWorld(int x, int y, int z) const
+{
+	FVector GridOrigin = GetGridOrigin();
+	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
+
+	return NewTile;
 }
 
 void ASquareGrid::RecursiveSwap(int i)
@@ -83,13 +106,18 @@ void ASquareGrid::RecursiveSwap(int i)
 
 void ASquareGrid::InitTiles(int length, int width, int height)
 {
-	for (int i = 0; i < length; i++)
+	SizeX = length;
+	SizeY = width;
+	SizeZ = height;
+
+	for (int z = 0; z < SizeZ; z++)
 	{
-		for (int j = 0; j < width; j++)
+		for (int y = 0; y < SizeY; y++)
 		{
-			for (int k = 0; k < height; k++)
+			for (int x = 0; x < SizeX; x++)
 			{
-				AddTile(i, j, k);
+				//We iterate through x first, then y, then z, so we append in the correct order
+				Grid.Add(CoordToWorld(x, y, z));
 			}
 		}
 	}
@@ -101,7 +129,13 @@ void ASquareGrid::AddTile(int x, int y, int z)
 	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
 	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
 
-	int index = CoordToIndex(x, y, z);
+	//If adding a tile within bounds
+	//If it's NULL_VECTOR, overwrite it. Otherwise, do nothing
+
+
+
+
+	/*int index = CoordToIndex(x, y, z);
 
 	//If we're adding a tile within bounds, then we're always overwriting an existing tile, null or not
 	if (x < SizeX && y < SizeY && z < SizeZ && index < Grid.Num()) 
@@ -162,7 +196,7 @@ void ASquareGrid::AddTile(int x, int y, int z)
 	for (int i = 0; i < Grid.Num(); i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}
+	}*/
 }
 
 /*void ASquareGrid::AddNullTile(int x, int y, int z)
@@ -240,7 +274,7 @@ void ASquareGrid::RemoveTile(int x, int y, int z)
 {
 	//NOTE: Removing a tile eliminates it from the grid completely. Nullifying a tile replaces a tile with NULL_VECTOR
 	UE_LOG(LogTemp, Warning, TEXT("Removing tile at: %d, %d, %d"), x, y, z);
-	int Index = CoordToIndex(x, y, z);
+	/*int Index = CoordToIndex(x, y, z);
 
 	//If the tile is is within bounds, and it isn't a NULL_VECTOR, remove it and resize the grid
 	if (Index < Grid.Num())
@@ -287,7 +321,7 @@ void ASquareGrid::RemoveTile(int x, int y, int z)
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}
 	//Update the grid sizes
-	UpdateAllSizes();
+	UpdateAllSizes();*/
 
 
 }
@@ -296,9 +330,9 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 {
 	//Nullifying certain tiles will cause the grid to be resized, similar to RemoveTile
 
-	int Index = CoordToIndex(x, y, z);
+	/*int Index = CoordToIndex(x, y, z);
 
-	/* Within grid bounds */
+	// Within grid bounds 
 	if (Index < Grid.Num())
 	{
 		//If the tile is non-null, turn it null
@@ -332,7 +366,7 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 	for (int i = 0; i < Grid.Num(); i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}
+	}*/
 }
 
 
@@ -386,7 +420,7 @@ void ASquareGrid::SetTileHeight(float NewHeight)
 void ASquareGrid::UpdateSizeX()
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Old Size X is %d"), SizeX);
+	/*UE_LOG(LogTemp, Warning, TEXT("Old Size X is %d"), SizeX);
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInX = GetGridOrigin().X;
@@ -412,13 +446,13 @@ void ASquareGrid::UpdateSizeX()
 		SizeX = round(LengthX / GetTileLength()) + 1;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("New Size X is %d"), SizeX);
+	UE_LOG(LogTemp, Warning, TEXT("New Size X is %d"), SizeX);*/
 
 }
 
 void ASquareGrid::UpdateSizeY()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Old Size Y is %d"), SizeY);
+	/*UE_LOG(LogTemp, Warning, TEXT("Old Size Y is %d"), SizeY);
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInY = GetGridOrigin().Y;
@@ -447,13 +481,13 @@ void ASquareGrid::UpdateSizeY()
 		SizeY = round(WidthY / GetTileWidth()) + 1;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("New Size Y is %d"), SizeY);
+	UE_LOG(LogTemp, Warning, TEXT("New Size Y is %d"), SizeY);*/
 }
 
 void ASquareGrid::UpdateSizeZ()
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Old Size Z is %d"), SizeZ);
+	/*UE_LOG(LogTemp, Warning, TEXT("Old Size Z is %d"), SizeZ);
 
 	//Find how many cells are in the X dimension. Done by checking all in first X row
 	float LargestCoordInZ = GetGridOrigin().Z;
@@ -479,15 +513,15 @@ void ASquareGrid::UpdateSizeZ()
 		SizeZ = round(HeightZ / GetTileHeight()) + 1;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("New Size Z is %d"), SizeZ);
+	UE_LOG(LogTemp, Warning, TEXT("New Size Z is %d"), SizeZ);*/
 
 }
 
 void ASquareGrid::UpdateAllSizes()
 {
-	UpdateSizeX();
+	/*UpdateSizeX();
 	UpdateSizeY();
-	UpdateSizeZ();
+	UpdateSizeZ();*/
 }
 
 int ASquareGrid::GetNumSpaces() const
