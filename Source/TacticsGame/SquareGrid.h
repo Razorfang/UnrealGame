@@ -20,6 +20,11 @@ public:
 
 	ASquareGrid();
 
+	/* Initialize a grid full of tiles, with dimensions X, Y, Z. Most common application.
+	Should only be called whenever the grid is first constructed */
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void InitTiles(int length, int width, int height);
+
 	/*Add a tile to the grid at a specified point in space*/
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 		void AddTile(int x, int y, int z);
@@ -36,10 +41,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 		void NullifyTile(int x, int y, int z);
 
-	/* Initialize a grid full of tiles, with dimensions X, Y, Z. Most common application. 
-	Should only be called whenever the grid is first constructed */
-	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void InitTiles(int length, int width, int height);
+
 
 	/* Width is Y, Length is X, Height is Z */
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")

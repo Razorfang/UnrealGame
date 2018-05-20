@@ -60,19 +60,6 @@ int ASquareGrid::CoordToIndex(int x, int y, int z) const
 
 	return (newSizeX * newSizeY) * z + (newSizeX)* y + x;
 
-	/*
-	int relativeX = x - GetGridOrigin().X;
-	int relativeY = y - GetGridOrigin().Y;
-	int relativeZ = z - GetGridOrigin().Z;
-
-	if (relativeX >= SizeX) { newSizeX = relativeX + 1; };
-	if (relativeY >= SizeY) { newSizeY = relativeY + 1; };
-	if (relativeZ >= SizeZ) { newSizeZ = relativeZ + 1; };
-
-	UE_LOG(LogTemp, Warning, TEXT("%d,%d,%d maps to %d"), relativeX, relativeY, relativeZ, (newSizeX * newSizeY) * relativeZ + (newSizeX)* relativeY + relativeX);
-
-	return (newSizeX * newSizeY) * relativeZ + (newSizeX)* relativeY + relativeX;
-	*/
 }
 
 void ASquareGrid::RecursiveSwap(int i)
@@ -91,6 +78,20 @@ void ASquareGrid::RecursiveSwap(int i)
 	if ((Grid[i] != NULL_VECTOR) && (NewIndex != i))
 	{
 		RecursiveSwap(i);
+	}
+}
+
+void ASquareGrid::InitTiles(int length, int width, int height)
+{
+	for (int i = 0; i < length; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			for (int k = 0; k < height; k++)
+			{
+				AddTile(i, j, k);
+			}
+		}
 	}
 }
 
@@ -334,19 +335,6 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 	}
 }
 
-void ASquareGrid::InitTiles(int length, int width, int height)
-{
-	for (int i = 0; i < length; i++)
-	{
-		for (int j = 0; j < width; j++)
-		{
-			for (int k = 0; k < height; k++)
-			{
-				AddTile(i, j, k);
-			}
-		}
-	}
-}
 
 float ASquareGrid::GetTileWidth() const { return TileWidth; }
 float ASquareGrid::GetTileLength() const { return TileLength; }
@@ -394,96 +382,6 @@ void ASquareGrid::SetTileHeight(float NewHeight)
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
-
-//int ASquareGrid::GetSizeX() const { return SizeX; }
-//int ASquareGrid::GetSizeY() const { return SizeY; }
-//int ASquareGrid::GetSizeZ() const { return SizeZ; }
-
-/*void ASquareGrid::SetSizeX(int NewSizeX)
-{
-	//TODO: Resize the grid by adding and removing vectors from the grid array
-
-
-
-	//Shrinking
-	if (NewSizeX == 0)
-	{
-		//Delete the grid
-		Grid.Empty();
-	}
-
-	else if (NewSizeX < SizeX)
-	{
-		//Removing elements
-	}
-
-	//Growing
-	else if (NewSizeX > SizeX)
-	{
-		//Adding more null vectors
-
-	}
-
-	//Else, the sizes are the same, and we do nothing
-	SizeY = NewSizeX;
-}*/
-
-/*void ASquareGrid::SetSizeY(int NewSizeY)
-{
-	// TODO: Resize the grid by adding and removing vectors from the grid array 
-
-
-	//Shrinking
-	if (NewSizeY == 0)
-	{
-		//Delete the grid
-		Grid.Empty();
-	}
-
-	//Shrinking
-	if (NewSizeY < SizeY)
-	{
-		//Removing elements
-	}
-
-	//Growing
-	else if (NewSizeY > SizeY)
-	{
-		//Adding more null vectors
-
-	}
-
-	//Else, the sizes are the same, and we do nothing
-	SizeY = NewSizeY;
-}*/
-
-/*void ASquareGrid::SetSizeZ(int NewSizeZ)
-{
-	// TODO: Resize the grid by adding and removing vectors from the grid array 
-
-	//Shrinking
-	if (NewSizeZ == 0)
-	{
-		//Delete the grid
-		Grid.Empty();
-	}
-
-	//Shrinking
-	if (NewSizeZ < SizeZ)
-	{
-		//Removing elements
-	}
-
-	//Growing
-	else if (NewSizeZ > SizeZ)
-	{
-		//Adding more null vectors
-
-	}
-
-	//Else, the sizes are the same, and we do nothing
-	SizeZ = NewSizeZ;
-}*/
 
 void ASquareGrid::UpdateSizeX()
 {
