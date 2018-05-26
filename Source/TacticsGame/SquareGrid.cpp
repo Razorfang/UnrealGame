@@ -119,6 +119,9 @@ void ASquareGrid::InitTiles(int length, int width, int height)
 	}
 	else
 	{
+
+		//Make a new mesh for each z-layer
+
 		//Scale the plane mesh so that it is the right size
 		FVector NewScale(length, width, 1);
 		GridMesh->SetWorldScale3D(NewScale);
