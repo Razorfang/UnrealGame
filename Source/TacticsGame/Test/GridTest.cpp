@@ -85,10 +85,10 @@ bool FInitTest::RunTest(const FString& Parameters)
 	}
 
 
-	//Do the initialization, and check if it makes the right number of tiles, and also that they are in the correct spot (TODO). Use random numbers between 0 and 99
-	int randX = FMath::Rand() % 100;
-	int randY = FMath::Rand() % 100;
-	int randZ = FMath::Rand() % 100;
+	//Do the initialization, and check if it makes the right number of tiles, and also that they are in the correct spot (TODO). Use random numbers between 0 and 9
+	int randX = FMath::Rand() % 10;
+	int randY = FMath::Rand() % 10;
+	int randZ = FMath::Rand() % 10;
 
 	TestGrid->InitTiles(randX, randY, randZ);
 
@@ -170,8 +170,6 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	{
 		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
 	}*/
-
-	//For now we only care about adding within bounds, so we'll 
 
 
 	/*if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
@@ -268,10 +266,7 @@ bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
 	}
 
 	//Add 27 tiles one at a time to fill a 3x3x3 cube
-	for (int i = 0; i < 27; i++)
-	{
-		TestGrid->AddTile(i % 3, (i / 3) % 3, (i / 9) % 3);
-	}
+	//TestGrid->InitTiles(3, 3, 3);
 
 	/*if (TestGrid->GetSizeX() != 3 && TestGrid->GetSizeY() != 3 && TestGrid->GetSizeZ() != 3 && TestGrid->GetNumSpaces() != 27)
 	{
@@ -279,15 +274,18 @@ bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
 	}*/
 
 	//Nullify each tile, until everything is gone. This should have the same effect as removing since we are nullifying the end
-	for (int i = 26; i >= 0; i--)
+	/*for (int i = 26; i >= 0; i--)
 	{
 		TestGrid->NullifyTile(i % 3, (i / 3) % 3, (i / 9) % 3);
-	}
+	}*/
 
 	/*if (TestGrid->GetSizeX() != 0 && TestGrid->GetSizeY() != 0 && TestGrid->GetSizeZ() != 0 && TestGrid->GetNumSpaces() != 0)
 	{
 		return false;
 	}*/
+
+	TestGrid->InitTiles(3, 3, 2);
+	TestGrid->NullifyTile(1, 0, 0);
 
 	return true;
 

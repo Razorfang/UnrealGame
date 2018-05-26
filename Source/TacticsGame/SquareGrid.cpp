@@ -265,6 +265,8 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 		//If the tile isn't null, nullify it, unless it's the last tile, in which case we remove it from the grid
 		if (index == Grid.Num() - 1)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Deleting the last tile"));
+
 			Grid.RemoveAt(index);
 
 			//Update the grid sizes
@@ -273,7 +275,9 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 
 		else if (Grid[index] != NULL_VECTOR)
 		{
-			Grid[index] == NULL_VECTOR;
+			UE_LOG(LogTemp, Warning, TEXT("Nullifying this tile"));
+
+			Grid[index] = NULL_VECTOR;
 
 			//Update the grid sizes
 			UpdateAllSizes();
@@ -458,7 +462,7 @@ int ASquareGrid::GetNumSpaces() const
 
 	for (int i = 0; i < Grid.Num(); i++)
 	{
-		if (Grid[i] == NULL_VECTOR)
+		if (Grid[i] != NULL_VECTOR)
 		{
 			count++;
 		}
