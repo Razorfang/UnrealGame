@@ -37,6 +37,8 @@ ASquareGrid::ASquareGrid()
 
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Square grid initialized. TW,TL,TH,SX,SY,SZ,origin: %f,%f,%f,%d,%d,%d,(%f %f %f)"), TileWidth, TileLength, TileHeight, SizeX, SizeY, SizeZ, GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z));
 
+		//To set sizes appropriately, we need bounding boxes
+
 	}
 }
 
@@ -110,27 +112,39 @@ void ASquareGrid::RecursiveSwap(int i)
 void ASquareGrid::InitTiles(int length, int width, int height)
 {
 
-	if (Grid.Num() == 0)
+	
+	if (length == 0 && width == 0 && height == 0)
 	{
-		SizeX = length;
-		SizeY = width;
-		SizeZ = height;
-
-		for (int z = 0; z < SizeZ; z++)
-		{
-			for (int y = 0; y < SizeY; y++)
-			{
-				for (int x = 0; x < SizeX; x++)
-				{
-					//We iterate through x first, then y, then z, so we append in the correct order
-					Grid.Add(CoordToWorld(x, y, z));
-				}
-			}
-		}
+		UE_LOG(LogTemp, Warning, TEXT("You are trying to initialize an empty grid with nothing. Why would you do this?"));
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Please don't call this function if the grid is non-empty"));
+		//Scale the plane mesh so that it is the right size
+		FVector NewScale(length, width, 1);
+		GridMesh->SetWorldScale3D(NewScale);
+
+		if (Grid.Num() == 0)
+		{
+			SizeX = length;
+			SizeY = width;
+			SizeZ = height;
+
+			for (int z = 0; z < SizeZ; z++)
+			{
+				for (int y = 0; y < SizeY; y++)
+				{
+					for (int x = 0; x < SizeX; x++)
+					{
+						//We iterate through x first, then y, then z, so we append in the correct order
+						Grid.Add(CoordToWorld(x, y, z));
+					}
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Please don't call this function if the grid is non-empty"));
+		}
 	}
 
 	//Check the grid itself
