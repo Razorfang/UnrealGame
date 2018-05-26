@@ -73,4 +73,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
 		class UStaticMeshComponent* GridMesh;
 
+	/* Material to represent a tile on the grid */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
+	//	class UStaticMeshComponent* GridMesh;
+
 };

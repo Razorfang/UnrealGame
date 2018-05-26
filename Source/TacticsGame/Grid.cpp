@@ -13,10 +13,11 @@ AGrid::AGrid()
 	//Create the static mesh component
 	GridMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridMesh"));
 
+	/* Set mobility to stationary for efficient lighting */
+	GridMesh->SetMobility(EComponentMobility::Stationary);
+
 	//Base other stuff around this component. Not needed for our example, but we may come back to this
 	RootComponent = GridMesh;
-
-	/* TODO: Set mobility to stationary for efficient lighting */
 
 }
 

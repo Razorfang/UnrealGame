@@ -26,6 +26,7 @@ ASquareGrid::ASquareGrid()
 	/*Set the cell mesh here. For now, we will use the Plane mesh.*/
 	//GridMesh->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane"));
+
 	if (CellAsset.Succeeded())
 	{
 		GridMesh->SetStaticMesh(CellAsset.Object);
@@ -35,9 +36,6 @@ ASquareGrid::ASquareGrid()
 		This is just a test*/
 
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Square grid initialized. TW,TL,TH,SX,SY,SZ,origin: %f,%f,%f,%d,%d,%d,(%f %f %f)"), TileWidth, TileLength, TileHeight, SizeX, SizeY, SizeZ, GetGridOrigin().X, GetGridOrigin().Y, GetGridOrigin().Z));
-
-		//Set the mobility of the grid to immoble
-		GridMesh->SetMobility(EComponentMobility::Stationary);
 
 	}
 }
