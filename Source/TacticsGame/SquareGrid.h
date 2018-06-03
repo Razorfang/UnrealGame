@@ -65,6 +65,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
 		int GetNumSpaces() const; ///
 
+	 /* Constructs the vector that should go at the coordinate (x,y,z) */
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	FVector CoordToWorld(int x, int y, int z) const; ///
 
 private:
 	/* Used to determine how wide this grid is. This is what we multiply by to translate cartesian to world. Used to scale Y */
@@ -87,9 +90,6 @@ private:
 
 	/* Checks if (x,y,z) is within the bounds of the grid. Return true if it is and false if it isn't */
 	bool IsWithinBounds(int x, int y, int z) const; ///
-
-	/* Constructs the vector that should go at the coordinate (x,y,z) */
-	FVector CoordToWorld(int x, int y, int z) const; ///
 
 	/* To be called after a tile as added or removed from the grid, so that we have it correct*/
 	void UpdateSizeX(); ///
