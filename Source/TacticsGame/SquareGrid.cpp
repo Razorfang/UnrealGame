@@ -139,7 +139,7 @@ void ASquareGrid::InitTiles(int length, int width, int height)
 					for (int x = 0; x < SizeX; x++)
 					{
 						//We iterate through x first, then y, then z, so we append in the correct order
-						Grid.Add(CoordToWorld(x, y, z));
+						//Grid.Add(CoordToWorld(x, y, z));
 					}
 				}
 			}
@@ -152,10 +152,10 @@ void ASquareGrid::InitTiles(int length, int width, int height)
 
 	//Check the grid itself
 	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}
+	}*/
 }
 
 void ASquareGrid::AddTile(int x, int y, int z)
@@ -174,9 +174,9 @@ void ASquareGrid::AddTile(int x, int y, int z)
 
 		for (int i = 0; i < (SizeX * SizeY * SizeZ) - 1; i++)
 		{
-			Grid.Add(NULL_VECTOR);
+			//Grid.Add(NULL_VECTOR);
 		}
-		Grid.Add(NewTile);
+		//Grid.Add(NewTile);
 	}
 
 	//If adding a tile within bounds
@@ -188,10 +188,10 @@ void ASquareGrid::AddTile(int x, int y, int z)
 		int index = (SizeX * SizeY) * z + (SizeX)* y + x;
 
 		//If it's NULL_VECTOR, overwrite it. 
-		if (Grid[index] == NULL_VECTOR)
+		/*if (Grid[index] == NULL_VECTOR)
 		{
 			Grid[index] = NewTile;
-		}
+		}*/
 
 		//Otherwise, do nothing
 	}
@@ -257,10 +257,10 @@ void ASquareGrid::AddTile(int x, int y, int z)
 
 	//Check the grid itself
 	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}
+	}*/
 }
 
 
@@ -282,13 +282,13 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Deleting the last tile"));
 
-			Grid.RemoveAt(index);
+			//Grid.RemoveAt(index);
 
 			//Update the grid sizes
 			UpdateAllSizes();
 		}
 
-		else if (Grid[index] != NULL_VECTOR)
+		/*else if (Grid[index] != NULL_VECTOR)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Nullifying this tile"));
 
@@ -296,7 +296,7 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 
 			//Update the grid sizes
 			UpdateAllSizes();
-		}
+		}*/
 
 		//Otherwise, do nothing
 	}
@@ -309,10 +309,10 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 
 	//Check the grid itself
 	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}
+	}*/
 }
 
 
@@ -328,10 +328,10 @@ void ASquareGrid::SetTileWidth(float NewWidth)
 	float OriginY = GetGridOrigin().Y;
 
 	/* Change the Y-value of all points in the grid */
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		Grid[i].Y = NewWidth;
-	}
+	}*/
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
@@ -342,10 +342,10 @@ void ASquareGrid::SetTileLength(float NewLength)
 	TileLength = NewLength;
 
 	/* Change the X-value of all points in the grid */
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		Grid[i].X = NewLength;
-	}
+	}*/
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
@@ -355,10 +355,10 @@ void ASquareGrid::SetTileHeight(float NewHeight)
 	TileHeight = NewHeight;
 
 	/* Change the Z-value of all points in the grid */
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		Grid[i].Z = NewHeight;
-	}
+	}*/
 
 	/* TODO: Correct the appearance of the grid mesh */
 }
@@ -372,13 +372,13 @@ void ASquareGrid::UpdateSizeX()
 	float LargestCoordInX = GetGridOrigin().X;
 
 	//Iterate through all of the locations, checking for the largest X
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		if (Grid[i].X > LargestCoordInX && Grid[i] != NULL_VECTOR)
 		{
 			LargestCoordInX = Grid[i].X;
 		}
-	}
+	}*/
 
 	float LengthX = LargestCoordInX - GetGridOrigin().X;
 
@@ -404,14 +404,14 @@ void ASquareGrid::UpdateSizeY()
 	float LargestCoordInY = GetGridOrigin().Y;
 
 	//Iterate through all of the locations, checking for the largest X
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		if (Grid[i].Y > LargestCoordInY && Grid[i] != NULL_VECTOR)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Grid[i] = %f"), Grid[i].Y);
 			LargestCoordInY = Grid[i].Y;
 		}
-	}
+	}*/
 
 	float WidthY = LargestCoordInY - GetGridOrigin().Y;
 	UE_LOG(LogTemp, Warning, TEXT("GetGridOrigin().Y = %f"), GetGridOrigin().Y);
@@ -440,12 +440,12 @@ void ASquareGrid::UpdateSizeZ()
 
 	//Iterate through all of the locations, checking for the largest X
 	for (int i = 0; i < Grid.Num(); i++)
-	{
+	/*{
 		if (Grid[i].Z > LargestCoordInZ && Grid[i] != NULL_VECTOR)
 		{
 			LargestCoordInZ = Grid[i].Z;
 		}
-	}
+	}*/
 
 	float HeightZ = LargestCoordInZ - GetGridOrigin().Z;
 
@@ -456,7 +456,7 @@ void ASquareGrid::UpdateSizeZ()
 	}
 	else
 	{
-		SizeZ = round(HeightZ / GetTileHeight()) + 1;
+		//SizeZ = round(HeightZ / GetTileHeight()) + 1;
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("New Size Z is %d"), SizeZ);
@@ -475,13 +475,13 @@ int ASquareGrid::GetNumSpaces() const
 	//Count the number of non-NULL_VECTOR elements in the array
 	int count = 0;
 
-	for (int i = 0; i < Grid.Num(); i++)
+	/*for (int i = 0; i < Grid.Num(); i++)
 	{
 		if (Grid[i] != NULL_VECTOR)
 		{
 			count++;
 		}
-	}
+	}*/
 
 	return count;
 }

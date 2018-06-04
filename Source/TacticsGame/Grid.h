@@ -6,6 +6,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "GameFramework/Actor.h"
+#include "GridTile.h"
 #include "Grid.generated.h"
 
 /*
@@ -55,26 +56,15 @@ protected:
 
 	/* This grid's type */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
-		EGridType GridType;
+	EGridType GridType;
 
-	/*
-	Array of vectors, used to store the structure of the grid
-	The reason we store an array of vectors at each point is to allow for multilevel maps (e.g. going underneath a bridge)
-	When the mouse moves over a space, hitting a key should switch between different vertical layers if possible.
-	Actually, since nested TArrays are not supported, we'll just use arithmetic to treat a 1D array as a 2D array, based on x and y
-	This also is the most flexible way to hold it.
-	This type of grid means we can easily shift between any number of dimensions, depending on our game type
-	*/
+	/* Array of tiles, used to store the structure of the grid */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
-		TArray<FVector> Grid;
+	TArray<AGridTile *> Grid;
 
-	/* Static mesh to represent the grid in the level
-	This works by defining a mesh for a space of the grid (such as a square or hex), and copying it for each space*/
+	/* Static mesh to represent the grid in the level */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
-		class UStaticMeshComponent* GridMesh;
+	class UStaticMeshComponent* GridMesh;
 
-	/* Material to represent a tile on the grid */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
-	//	class UStaticMeshComponent* GridMesh;
 
 };
