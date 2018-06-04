@@ -7,17 +7,21 @@ AGrid::AGrid()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	//We don't yet know what type of grid this is. This will be changed by the subclasses
+	/* We don't yet know what type of grid this is. This will be changed by the subclasses */
 	GridType = EGridType::EUnknown;
 
+	/* This component will be at the top of our component heirarchy */
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = Root;
+
 	//Create the static mesh component
-	GridMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridMesh"));
+	//GridMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridMesh"));
 
 	/* Set mobility to stationary for efficient lighting */
-	GridMesh->SetMobility(EComponentMobility::Stationary);
+	//GridMesh->SetMobility(EComponentMobility::Stationary);
 
 	//Base other stuff around this component. Not needed for our example, but we may come back to this
-	RootComponent = GridMesh;
+	//RootComponent = GridMesh;
 
 }
 

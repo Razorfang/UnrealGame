@@ -29,7 +29,7 @@ ASquareGrid::ASquareGrid()
 
 	if (CellAsset.Succeeded())
 	{
-		GridMesh->SetStaticMesh(CellAsset.Object);
+		//GridMesh->SetStaticMesh(CellAsset.Object);
 
 		/*Set the mesh location so that it is located at the only cell
 		TODO: Check if we want the point to be the middle or the bottom-left corner
@@ -124,7 +124,7 @@ void ASquareGrid::InitTiles(int length, int width, int height)
 
 		//Scale the plane mesh so that it is the right size
 		FVector NewScale(length, width, 1);
-		GridMesh->SetWorldScale3D(NewScale);
+		//GridMesh->SetWorldScale3D(NewScale);
 
 		if (Grid.Num() == 0)
 		{

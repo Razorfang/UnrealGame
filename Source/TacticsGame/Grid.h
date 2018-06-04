@@ -34,21 +34,20 @@ class TACTICSGAME_API AGrid : public AActor
 	GENERATED_BODY()
 
 public:
-	/* Initialize a grid
-	* The default constructor can get away with doing nothing because we always call a specific type anyway*/
+
 	AGrid();
 
 	/* Called every frame */
 	virtual void Tick(float DeltaTime) override;
 
-	/* Get the type of grid this is. There is no setter because a grid MUST keep its type consistant */
+	/* Get the type of grid this is. There is no setter because a grid MUST keep its type consistent */
 	UFUNCTION(BlueprintPure, Category = "Grid")
-		EGridType GetGridType() const;
+	EGridType GetGridType() const;
 
 	/* The grid origin is the position of where the first space on the grid would be placed.
 	This is just the location of the Root Component, so we don't need to define a class variable*/
 	UFUNCTION(BlueprintPure, Category = "Grid")
-		FVector GetGridOrigin() const;
+	FVector GetGridOrigin() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -62,9 +61,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
 	TArray<AGridTile *> Grid;
 
-	/* Static mesh to represent the grid in the level */
+	/* This scene component allows the grid to be translated, rotated, and scaled */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
-	class UStaticMeshComponent* GridMesh;
-
+	USceneComponent* Root;
 
 };
