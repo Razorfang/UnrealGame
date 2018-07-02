@@ -4,7 +4,6 @@
 
 /* TODO: Should we trim NULL_VECTORS from the end of the grid, since it kind of goes against our system? */
 
-
 // Sets default values
 ASquareGrid::ASquareGrid()
 {
@@ -42,7 +41,112 @@ ASquareGrid::ASquareGrid()
 	}
 }
 
-int ASquareGrid::CoordToIndex(int x, int y, int z) const
+FVector ASquareGrid::CoordToWorld(int x, int y, int z) const
+{
+	FVector GridOrigin = GetGridOrigin();
+	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
+
+	return NewTile;
+}
+
+void ASquareGrid::InitTiles(int length, int width, int height, bool AllTilesState, UStaticMeshComponent* AllTilesMesh)
+{
+
+
+	if (length == 0 && width == 0 && height == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You are trying to initialize an empty grid with nothing. Why would you do this?"));
+	}
+	else if (Grid.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Please don't call this function if the grid is non-empty"));
+	}
+	else
+	{
+
+		//Iterate over each tile, initializing each one, and setting up the grid properly
+		SizeX = length;
+		SizeY = width;
+		SizeZ = height;
+
+		//TODO: Set the Tile Length, width, and height parameter
+
+		for (int z = 0; z < SizeZ; z++)
+		{
+			for (int y = 0; y < SizeY; y++)
+			{
+				for (int x = 0; x < SizeX; x++)
+				{
+
+					FVector TileLocation = CoordToWorld(x, y, z);
+					FRotator TileRotation(0, 0, 0); //TODO: Rotating the grid should also rotate the tiles
+					FActorSpawnParameters SpawnInfo;
+
+					//Create a new tile
+					ASquareGridTile* SquareTile = GetWorld()->SpawnActor<ASquareGridTile>(TileLocation, TileRotation, SpawnInfo);
+					if (!IsValid(SquareTile))
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Unable to spawn tile at %d,%d,%d"), x, y, z);
+						break;
+					}
+
+
+					//Set the tile's mesh
+					SquareTile->SetTileMesh(AllTilesMesh);
+
+					//Set the tile's state
+					SquareTile->SetIsHighlighted(AllTilesState);
+
+					//TODO: Set the tile's length, width, and height
+
+					//Add the tile to the grid. Due to our loop structure going through x, then y, then z, the places will be correct
+					Grid.Add(SquareTile);
+				}
+			}
+		}
+
+		//Scale the plane mesh so that it is the right size
+		//FVector NewScale(length, width, 1);
+		//GridMesh->SetWorldScale3D(NewScale);
+
+
+	}
+
+	//Check the grid itself
+	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		FVector Location = Grid[i]->GetWorldLocation();
+		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is located at (%f, %f, %f)"), Location.X, Location.Y, Location.Z);
+	}
+}
+
+
+void ASquareGrid::SetTilesMesh(UStaticMeshComponent* AllTilesMesh)
+{
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		if (Grid[i] != nullptr)
+		{
+			Grid[i]->SetTileMesh(AllTilesMesh);
+		}
+	}
+}
+
+
+void ASquareGrid::SetTilesHighlighted(bool AllTilesHighlightedState)
+{
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		if (Grid[i] != nullptr)
+		{
+			Grid[i]->SetIsHighlighted(AllTilesHighlightedState);
+		}
+	}
+}
+
+
+unsigned int ASquareGrid::CoordToIndex(int x, int y, int z) const
 {
 
 	/*If this vector falls outside the current grid, we need to get future sizes to update correctly
@@ -82,14 +186,6 @@ bool ASquareGrid::IsWithinBounds(int x, int y, int z) const
 	return true;
 }
 
-FVector ASquareGrid::CoordToWorld(int x, int y, int z) const
-{
-	FVector GridOrigin = GetGridOrigin();
-	FVector NewTile(GridOrigin.X + GetTileLength() * x, GridOrigin.Y + GetTileWidth() * y, GridOrigin.Z + GetTileHeight() * z);
-
-	return NewTile;
-}
-
 void ASquareGrid::RecursiveSwap(int i)
 {
 	/*UE_LOG(LogTemp, Warning, TEXT("Grid[%d] is not NULL_VECTOR"), i);
@@ -109,56 +205,13 @@ void ASquareGrid::RecursiveSwap(int i)
 	}*/
 }
 
-void ASquareGrid::InitTiles(int length, int width, int height)
+/*void ASquareGrid::InitTiles(int length, int width, int height, bool AllTilesState, UStaticMeshComponent* AllTilesMesh)
 {
 
-	
-	if (length == 0 && width == 0 && height == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("You are trying to initialize an empty grid with nothing. Why would you do this?"));
-	}
-	else
-	{
+}*/
 
-		//Make a new mesh for each z-layer
 
-		//Scale the plane mesh so that it is the right size
-		FVector NewScale(length, width, 1);
-		//GridMesh->SetWorldScale3D(NewScale);
-
-		if (Grid.Num() == 0)
-		{
-			SizeX = length;
-			SizeY = width;
-			SizeZ = height;
-
-			for (int z = 0; z < SizeZ; z++)
-			{
-				for (int y = 0; y < SizeY; y++)
-				{
-					for (int x = 0; x < SizeX; x++)
-					{
-						//We iterate through x first, then y, then z, so we append in the correct order
-						//Grid.Add(CoordToWorld(x, y, z));
-					}
-				}
-			}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Please don't call this function if the grid is non-empty"));
-		}
-	}
-
-	//Check the grid itself
-	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
-	/*for (int i = 0; i < Grid.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}*/
-}
-
-void ASquareGrid::AddTile(int x, int y, int z)
+void ASquareGrid::AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh, bool NewTileIsHighlighted)
 {
 	FVector NewTile = CoordToWorld(x, y, z);
 	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
@@ -313,6 +366,13 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
 	}*/
+}
+
+
+bool ASquareGrid::TileIsValid(int x, int y, int z)
+{
+	unsigned int index = CoordToIndex(x, y, z);
+	return IsValid(Grid[index]);
 }
 
 
@@ -475,13 +535,13 @@ int ASquareGrid::GetNumSpaces() const
 	//Count the number of non-NULL_VECTOR elements in the array
 	int count = 0;
 
-	/*for (int i = 0; i < Grid.Num(); i++)
+	for (int i = 0; i < Grid.Num(); i++)
 	{
-		if (Grid[i] != NULL_VECTOR)
+		if (Grid[i] != nullptr)
 		{
 			count++;
 		}
-	}*/
+	}
 
 	return count;
 }

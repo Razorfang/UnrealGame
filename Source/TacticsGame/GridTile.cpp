@@ -9,8 +9,15 @@ AGridTile::AGridTile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	/* We start out not knowing where the tile is located */
+	WorldLocation = NULL_VECTOR;
+
+	/* We don't plan to always use meshes, so make sure they start null */
+	TileMesh = nullptr;
+
 	/* All tiles begin un-highlighted */
 	IsHighlighted = false;
+
 
 }
 
@@ -32,6 +39,11 @@ void AGridTile::Tick(float DeltaTime)
 FVector AGridTile::GetWorldLocation() const
 {
 	return WorldLocation;
+}
+
+void AGridTile::SetWorldLocation(FVector NewLocation)
+{
+	WorldLocation = NewLocation;
 }
 
 UStaticMeshComponent* AGridTile::GetTileMesh() const

@@ -22,7 +22,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSpawnTest, "GridTest.Grid.Spawn Test", EAutoma
 bool FSpawnTest::RunTest(const FString& Parameters)
 {
 
-	//Set spawning parameters
+	//Set random spawning parameters
 	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
 	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
 	FActorSpawnParameters SpawnInfo;
@@ -33,6 +33,7 @@ bool FSpawnTest::RunTest(const FString& Parameters)
 	//Check the map was created properly
 	if (!IsValid(World))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
 		return false;
 	}
 
@@ -42,10 +43,21 @@ bool FSpawnTest::RunTest(const FString& Parameters)
 	//Check the object was constructed properly
 	if (!IsValid(TestGrid))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
 		return false;
 	}
+
+	//Make sure grid type is Unknown
+	if (TestGrid->GetGridType() != EGridType::EUnknown)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GridType is incorrect"));
+		return false;
+	}
+
+	//Make sure origin is set properly
 	if (TestGrid->GetGridOrigin() != MyLocation)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Origin is incorrect"));
 		return false;
 	}
 
@@ -53,7 +65,7 @@ bool FSpawnTest::RunTest(const FString& Parameters)
 }
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FInitTest, "GridTest.SquareGrid.Initialisation Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+/*IMPLEMENT_SIMPLE_AUTOMATION_TEST(FInitTest, "GridTest.SquareGrid.Initialisation Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FInitTest::RunTest(const FString& Parameters)
 {
 
@@ -98,10 +110,10 @@ bool FInitTest::RunTest(const FString& Parameters)
 	}
 
 	return true;
-}
+}*/
 
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSpawnTestSquare, "GridTest.SquareGrid.Spawn Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+/*IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSpawnTestSquare, "GridTest.SquareGrid.Spawn Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FSpawnTestSquare::RunTest(const FString& Parameters)
 {
 
@@ -133,9 +145,9 @@ bool FSpawnTestSquare::RunTest(const FString& Parameters)
 	}
 
 	return true;
-}
+}*/
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAddTileTestSquare, "GridTest.SquareGrid.Add Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+/*IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAddTileTestSquare, "GridTest.SquareGrid.Add Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FAddTileTestSquare::RunTest(const FString& Parameters)
 {
 
@@ -163,7 +175,7 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	if (TestGrid->GetGridOrigin() != MyLocation)
 	{
 		return false;
-	}
+	}*/
 
 	//Add 27 tiles one at a time to fill a 3x3x3 cube
 	/*for (int i = 0; i < 27; i++)
@@ -178,8 +190,8 @@ bool FAddTileTestSquare::RunTest(const FString& Parameters)
 	}*/
 	
 
-	return true;
-}
+	//return true;
+//}
 
 /*IMPLEMENT_SIMPLE_AUTOMATION_TEST(FRemoveTileTestSquare, "GridTest.SquareGrid.Remove Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
@@ -236,7 +248,7 @@ bool FRemoveTileTestSquare::RunTest(const FString& Parameters)
 
 }*/
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNullifyTileTestSquare, "GridTest.SquareGrid.Nullify Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
+/*IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNullifyTileTestSquare, "GridTest.SquareGrid.Nullify Tile Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
 {
 	//Set spawning parameters
@@ -263,7 +275,7 @@ bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
 	if (TestGrid->GetGridOrigin() != MyLocation)
 	{
 		return false;
-	}
+	}*/
 
 	//Add 27 tiles one at a time to fill a 3x3x3 cube
 	//TestGrid->InitTiles(3, 3, 3);
@@ -284,9 +296,9 @@ bool FNullifyTileTestSquare::RunTest(const FString& Parameters)
 		return false;
 	}*/
 
-	TestGrid->InitTiles(3, 3, 2);
+	/*TestGrid->InitTiles(3, 3, 2);
 	TestGrid->NullifyTile(1, 0, 0);
 
 	return true;
 
-}
+}*/

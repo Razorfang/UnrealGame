@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "Grid.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
+#include "Runtime/Engine/Classes/GameFramework/Actor.h"
+#include "SquareGridTile.h"
 #include "SquareGrid.generated.h"
 
 
@@ -20,34 +23,59 @@ public:
 
 	ASquareGrid();
 
-	/* Initialize a grid full of tiles, with dimensions X, Y, Z. Most common application.
-	Should only be called whenever the grid is first constructed */
+	/* Initialize a grid full of tiles, with dimensions X, Y, Z.
+	AllTilesState will denote whether all tiles are valid (true) or all tiles are invalid (false)*/
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-	void InitTiles(int length, int width, int height); ///
+	void InitTiles(int length, int width, int height, bool AllTilesState, UStaticMeshComponent* AllTilesMesh); ///
 
-	/*Add a tile to the grid at a specified point in space*/
+	/* Initialize a grid full of tiles, using an array of something*/
+	//I found out that apparently, you cannot overload UFUNCTIONs
+	/*UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void InitTiles(int length, int width, int height);*/
+
+	/* Give all tiles in the grid the passed mesh */
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void AddTile(int x, int y, int z);
+	void SetTilesMesh(UStaticMeshComponent* AllTilesMesh); ///
 
-	/*Turn a tile into a null vector*/
+	/* Make every tile in the grid highlighted (true) or not (false) */
+	/* Give all tiles in the grid the passed mesh */
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void NullifyTile(int x, int y, int z); ///
+	void SetTilesHighlighted(bool AllTilesHighlightedState); ///
 
+	/* Add a tile to the grid at a specified point in space */
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh, bool NewTileIsHighlighted);
+
+	/* Remove a tile entirely. This is different to nullifying, which just makes it invisible to the game */
+	//UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	//void RemoveTile(int x, int y, int z);
+
+	/*Hide the tile. It still exists in memory, but it will not be visible to the game*/
+	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	void NullifyTile(int x, int y, int z); 
+
+	/*Undo the effects of NullifyTile */
+	//UFUNCTION(BlueprintCallable, Category = "SquareGrid")
+	//void DeNullifyTile(int x, int y, int z);
+
+	/*Check if the grid location is a valid tile*/
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	bool TileIsValid(int x, int y, int z); ///
 
 
 	/* Width is Y, Length is X, Height is Z */
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-		float GetTileWidth() const; ///
+	float GetTileWidth() const; ///
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-		float GetTileLength() const; ///
+	float GetTileLength() const; ///
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-		float GetTileHeight() const; ///
+	float GetTileHeight() const; ///
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void SetTileWidth(float NewWidth); ///
+	void SetTileWidth(float NewWidth); ///
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void SetTileLength(float NewLength); ///
+	void SetTileLength(float NewLength); ///
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
-		void SetTileHeight(float NewHeight); ///
+	void SetTileHeight(float NewHeight); ///
 
 	/*UFUNCTION(BlueprintPure, Category = "SquareGrid")
 		int GetSizeX() const;
@@ -63,9 +91,9 @@ public:
 		void SetSizeZ(int NewSizeZ);*/
 
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
-		int GetNumSpaces() const; ///
+	int GetNumSpaces() const; ///
 
-	 /* Constructs the vector that should go at the coordinate (x,y,z) */
+	 /* Calculates the world position of the tile at coordinate (x,y,z) */
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	FVector CoordToWorld(int x, int y, int z) const; ///
 
@@ -86,16 +114,16 @@ private:
 
 
 	/* Converts an (x,y,z) point into an index for the Grid array */
-	int CoordToIndex(int x, int y, int z) const;
+	unsigned int CoordToIndex(int x, int y, int z) const;
 
 	/* Checks if (x,y,z) is within the bounds of the grid. Return true if it is and false if it isn't */
-	bool IsWithinBounds(int x, int y, int z) const; ///
+	bool IsWithinBounds(int x, int y, int z) const; 
 
 	/* To be called after a tile as added or removed from the grid, so that we have it correct*/
-	void UpdateSizeX(); ///
-	void UpdateSizeY(); ///
-	void UpdateSizeZ(); ///
-	void UpdateAllSizes(); ///
+	void UpdateSizeX(); 
+	void UpdateSizeY(); 
+	void UpdateSizeZ();
+	void UpdateAllSizes(); 
 
 	void RecursiveSwap(int i);
 };
