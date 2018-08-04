@@ -41,6 +41,54 @@ ASquareGrid::ASquareGrid()
 	}
 }
 
+void ASquareGrid::PrintDebug()
+{
+	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
+	for (int i = 0; i < Grid.Num(); i++)
+	{
+		if (!IsValid(Grid[i]))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("nullptr at index %d"), i);
+		}
+		else
+		{
+			FVector WorldLocation = Grid[i]->GetWorldLocation();
+			UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, WorldLocation.X, WorldLocation.Y, WorldLocation.Z);
+		}
+	}
+}
+
+ASquareGridTile* ASquareGrid::SpawnSquareGridTile(int x, int y, int z, float pitch, float yaw, float roll, UStaticMeshComponent* mesh, bool state)
+{
+	FVector TileLocation = CoordToWorld(x, y, z);
+	FRotator TileRotation(pitch, yaw, roll); //TODO: Rotating the grid should also rotate the tiles
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a new tile
+	ASquareGridTile* SquareTile = GetWorld()->SpawnActor<ASquareGridTile>(TileLocation, TileRotation, SpawnInfo);
+	if (!IsValid(SquareTile))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Unable to spawn tile at %d,%d,%d"), x, y, z);
+	}
+	else
+	{
+
+		//Set the tile's location
+		SquareTile->SetWorldLocation(CoordToWorld(x, y, z));
+
+		//Set the tile's mesh
+		SquareTile->SetTileMesh(mesh);
+
+		//Set the tile's state
+		SquareTile->SetIsHighlighted(state);
+
+		//TODO: Set the tile's length, width, and height
+	}
+
+	return SquareTile;
+}
+
+
 FVector ASquareGrid::CoordToWorld(int x, int y, int z) const
 {
 	FVector GridOrigin = GetGridOrigin();
@@ -57,7 +105,7 @@ void ASquareGrid::InitTiles(int length, int width, int height, bool AllTilesStat
 	{
 		UE_LOG(LogTemp, Warning, TEXT("You are trying to initialize an empty grid with nothing. Why would you do this?"));
 	}
-	else if (Grid.Num() == 0)
+	else if (Grid.Num() != 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Please don't call this function if the grid is non-empty"));
 	}
@@ -78,29 +126,13 @@ void ASquareGrid::InitTiles(int length, int width, int height, bool AllTilesStat
 				for (int x = 0; x < SizeX; x++)
 				{
 
-					FVector TileLocation = CoordToWorld(x, y, z);
-					FRotator TileRotation(0, 0, 0); //TODO: Rotating the grid should also rotate the tiles
-					FActorSpawnParameters SpawnInfo;
-
-					//Create a new tile
-					ASquareGridTile* SquareTile = GetWorld()->SpawnActor<ASquareGridTile>(TileLocation, TileRotation, SpawnInfo);
-					if (!IsValid(SquareTile))
-					{
-						UE_LOG(LogTemp, Warning, TEXT("Unable to spawn tile at %d,%d,%d"), x, y, z);
-						break;
-					}
-
-
-					//Set the tile's mesh
-					SquareTile->SetTileMesh(AllTilesMesh);
-
-					//Set the tile's state
-					SquareTile->SetIsHighlighted(AllTilesState);
-
-					//TODO: Set the tile's length, width, and height
+					ASquareGridTile* SquareTile = SpawnSquareGridTile(x, y, z, 0, 0, 0, AllTilesMesh, AllTilesState);
 
 					//Add the tile to the grid. Due to our loop structure going through x, then y, then z, the places will be correct
-					Grid.Add(SquareTile);
+					if (IsValid(SquareTile))
+					{
+						Grid.Add(SquareTile);
+					}
 				}
 			}
 		}
@@ -171,7 +203,7 @@ unsigned int ASquareGrid::CoordToIndex(int x, int y, int z) const
 
 	return (SizeX * SizeY) * z + (SizeX)* y + x;*/
 
-	return 0;
+	return (SizeX * SizeY) * z + (SizeX)* y + x;
 
 }
 
@@ -213,8 +245,8 @@ void ASquareGrid::RecursiveSwap(int i)
 
 void ASquareGrid::AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh, bool NewTileIsHighlighted)
 {
-	FVector NewTile = CoordToWorld(x, y, z);
-	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
+	//FVector NewTile = CoordToWorld(x, y, z);
+	UE_LOG(LogTemp, Warning, TEXT("New Tile Location: %f, %f, %f"), x, y, z);
 
 	//If the grid is empty, then we add a bunch of null tiles appropriately
 	if (Grid.Num() == 0)
@@ -227,9 +259,14 @@ void ASquareGrid::AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh
 
 		for (int i = 0; i < (SizeX * SizeY * SizeZ) - 1; i++)
 		{
-			//Grid.Add(NULL_VECTOR);
+			//Add a null tile
+			Grid.Add(nullptr);
 		}
-		//Grid.Add(NewTile);
+		//spawn a tile
+		ASquareGridTile* NewTile = SpawnSquareGridTile(x, y, z, 0, 0, 0, NewTileMesh, NewTileIsHighlighted);
+
+		//add the tile to the grid
+		Grid.Add(NewTile);
 	}
 
 	//If adding a tile within bounds
@@ -238,88 +275,82 @@ void ASquareGrid::AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh
 		UE_LOG(LogTemp, Warning, TEXT("Tile we want to add is within bounds"));
 
 		//We can calculate the index better if we're in bounds
-		int index = (SizeX * SizeY) * z + (SizeX)* y + x;
+		int index = CoordToIndex(x, y, z);
 
-		//If it's NULL_VECTOR, overwrite it. 
-		/*if (Grid[index] == NULL_VECTOR)
+		//If it's null, replace it
+		if (Grid[index] == nullptr)
 		{
-			Grid[index] = NewTile;
-		}*/
+			//spawn a tile
+			ASquareGridTile* NewTile = SpawnSquareGridTile(x, y, z, 0, 0, 0, NewTileMesh, NewTileIsHighlighted);
 
-		//Otherwise, do nothing
+			//add the tile to the grid
+			Grid[index] = NewTile;
+
+			UE_LOG(LogTemp, Warning, TEXT("Nothing here"));
+		}
+
+		//Otherwise, do nothing, since a tile is already there
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Something here"));
+		}
 	}
 
 	//If it's outside of bounds, then we need to resize the grid accordingly. This is the tricky part
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Tile we want to add is out of bounds. We will not implement this at this time"));
+		UE_LOG(LogTemp, Warning, TEXT("Tile we want to add is out of bounds"));
 
-		//Readjust the grid sizes
+		//Readjust the grid sizes based on the largest of two values
+		if (x >= SizeX) { SizeX = x + 1; UE_LOG(LogTemp, Warning, TEXT("New SizeX is %d"), SizeX); }
+		if (y >= SizeY) { SizeY = y + 1; UE_LOG(LogTemp, Warning, TEXT("New SizeY is %d"), SizeY); }
+		if (z >= SizeZ) { SizeZ = z + 1; UE_LOG(LogTemp, Warning, TEXT("New SizeZ is %d"), SizeZ); }
 
-		//Resize the grid appropriately
-
-		//Move all tiles to new spots
-
-		//Put new tile in its place
-
-		//Remove unnecessary tiles from the end
-
-	}
-
-	/*
-	else
-	{
-		//Tile outside of bounds, need to do complex stuff
-
-		//Readjust the grid sizes
-		if (x >= SizeX) { SizeX = x + 1; UE_LOG(LogTemp, Warning, TEXT("New SizeX is %d"), SizeX);}
-		if (y >= SizeY) { SizeY = y + 1; UE_LOG(LogTemp, Warning, TEXT("New SizeY is %d"), SizeY);}
-		if (z >= SizeZ) { SizeZ = z + 1; UE_LOG(LogTemp, Warning, TEXT("New SizeZ is %d"), SizeZ);}
-
-		//Resize the grid appropriately, by adding more nulls on the end
-		//Grid.SetNum(SizeX * SizeY * SizeZ);
+		//Resize the grid appropriately, by adding more nulls
 		for (int j = Grid.Num(); j < (SizeX * SizeY * SizeZ); j++)
 		{
-			Grid.Add(NULL_VECTOR);
+			Grid.Add(nullptr);
 		}
 
-		//Move all existing tiles to where their new spots are
-		for (int i = 0; i < Grid.Num(); i++)
-		{
-			if (Grid[i] != NULL_VECTOR)
-			{
-				//Recursively swaps positions that are in the way of each other until the order is correct
-				RecursiveSwap(i);
-			}
-		}
+		//Move all tiles to new spots:
 
-		//Put the new tile in its place
-		Grid[index] = NewTile;
+		//Get the new index - this works since we resized the grid
+		int NewIndex = CoordToIndex(x, y, z);
+		UE_LOG(LogTemp, Warning, TEXT("New index is %d"), NewIndex);
 
-		//Remove unneessary tiles from the end
+		//Move everything at and after index to the end
 		int k = Grid.Num() - 1;
-		while (Grid[k] == NULL_VECTOR)
+		while (k > NewIndex)
 		{
-			Grid.RemoveAt(k);
-			k = k - 1;
+			Grid.Swap(k, k - 1);
+			k--;
 		}
+		UE_LOG(LogTemp, Warning, TEXT("Swapping done"));
 
-		UE_LOG(LogTemp, Warning, TEXT("Adding tile to the end of the grid and filling in space"));
+		//Put new tile in its place
+		ASquareGridTile* NewTile = SpawnSquareGridTile(x, y, z, 0, 0, 0, NewTileMesh, NewTileIsHighlighted);
+		Grid[NewIndex] = NewTile;
+		UE_LOG(LogTemp, Warning, TEXT("Assigning done"));
 
-	}*/
+		//Remove unnecessary tiles from the end TODOL I don't think this is actually necessary, since we're only resizing to what we need
+		int  l = Grid.Num() - 1;
+		while (Grid[l] == nullptr)
+		{
+			//Remove end tile
+			Grid.Pop();
+			l--;
+		}
+		UE_LOG(LogTemp, Warning, TEXT("Popping done"));
+	}
 
 	//Check the grid itself
-	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
-	/*for (int i = 0; i < Grid.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}*/
+	PrintDebug();
 }
 
 
 void ASquareGrid::NullifyTile(int x, int y, int z)
 {
-	//Nullifying certain tiles will cause the grid to be resized, similar to RemoveTile
+	//Nullifying certain tiles will cause the grid to be resized
 
 	FVector NewTile = CoordToWorld(x, y, z);
 	UE_LOG(LogTemp, Warning, TEXT("Nulled Tile Location: %f, %f, %f"), NewTile.X, NewTile.Y, NewTile.Z);
@@ -328,30 +359,12 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 	if (IsWithinBounds(x, y, z))
 	{
 		//We can calculate the index better if we're in bounds
-		int index = (SizeX * SizeY) * z + (SizeX)* y + x;
+		int index = CoordToIndex(x, y, z);
 
-		//If the tile isn't null, nullify it, unless it's the last tile, in which case we remove it from the grid
-		if (index == Grid.Num() - 1)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Deleting the last tile"));
+		//Nullify that tile, meaning we make it invisible
+		HideGridTile(Grid[index]);
 
-			//Grid.RemoveAt(index);
-
-			//Update the grid sizes
-			UpdateAllSizes();
-		}
-
-		/*else if (Grid[index] != NULL_VECTOR)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Nullifying this tile"));
-
-			Grid[index] = NULL_VECTOR;
-
-			//Update the grid sizes
-			UpdateAllSizes();
-		}*/
-
-		//Otherwise, do nothing
+		//TODO: If we need to resize the grid, do so. This involves removing trailing nulls, and changing the size fields
 	}
 
 	//Otherwise, the tile is out of bounds, and we don't do anything
@@ -361,11 +374,7 @@ void ASquareGrid::NullifyTile(int x, int y, int z)
 	}
 
 	//Check the grid itself
-	UE_LOG(LogTemp, Warning, TEXT("After updating, the grid looks like: "));
-	/*for (int i = 0; i < Grid.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Grid[%d] = (%f, %f, %f)"), i, Grid[i].X, Grid[i].Y, Grid[i].Z);
-	}*/
+	PrintDebug();
 }
 
 

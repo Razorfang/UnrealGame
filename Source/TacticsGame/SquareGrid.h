@@ -46,7 +46,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh, bool NewTileIsHighlighted);
 
-	/* Remove a tile entirely. This is different to nullifying, which just makes it invisible to the game */
+	/* Remove a tile entirely (despawn it). This is different to nullifying, which just makes it invisible to the game */
 	//UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	//void RemoveTile(int x, int y, int z);
 
@@ -77,6 +77,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	void SetTileHeight(float NewHeight); ///
 
+	//TODO: Put these back
 	/*UFUNCTION(BlueprintPure, Category = "SquareGrid")
 		int GetSizeX() const;
 	UFUNCTION(BlueprintPure, Category = "SquareGrid")
@@ -113,7 +114,8 @@ private:
 	int SizeZ;
 
 
-	/* Converts an (x,y,z) point into an index for the Grid array */
+	/* Converts an (x,y,z) point into an index for the Grid array
+	This should only be used for getting the index of tiles WITHIN BOUNDS*/
 	unsigned int CoordToIndex(int x, int y, int z) const;
 
 	/* Checks if (x,y,z) is within the bounds of the grid. Return true if it is and false if it isn't */
@@ -126,4 +128,10 @@ private:
 	void UpdateAllSizes(); 
 
 	void RecursiveSwap(int i);
+
+	//Spawns a SquareGridTile. Will return an invalid tile if spawning was unsuccessful
+	ASquareGridTile* SpawnSquareGridTile(int x, int y, int z, float pitch, float yaw, float roll, UStaticMeshComponent* mesh, bool state); ///
+
+	void PrintDebug();
+
 };

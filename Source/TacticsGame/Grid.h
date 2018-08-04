@@ -60,4 +60,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Grid")
 	USceneComponent* Root;
 
+	//TODO: Function to spawn a tile
+
+	/* Make a tile invisible, but don't delete it A*/
+	void HideGridTile(AGridTile* Tile); ///
+
+	/* Make a tile visible */
+	void ShowGridTile(AGridTile* Tile); ///
+
+	/* Remove a tile from existence */
+	void DespawnGridTile(AGridTile* Tile);
+
 };

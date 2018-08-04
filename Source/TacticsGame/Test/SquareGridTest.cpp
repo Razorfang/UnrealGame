@@ -1,14 +1,35 @@
 #include "SquareGrid.h"
 #include "AutomationTest.h"
+#include "AutomationEditorCommon.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSquareConstructionTest, "GridTest.SquareGrid.Constructor Test", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
 bool FSquareConstructionTest::RunTest(const FString& Parameters)
 {
 
-	//Construct a ASquareGrid object
-	ASquareGrid SquareTestGrid;
+	//Set random spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
 
-	//Check that the default parameters are correct
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
+		return false;
+	}
 
 	return true;
 }
@@ -17,10 +38,32 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSquareInitTest, "GridTest.SquareGrid.Initializ
 bool FSquareInitTest::RunTest(const FString& Parameters)
 {
 
-	//Construct a ASquareGrid object
-	ASquareGrid SquareTestGrid;
+	//Set random spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
 
-	//Initialize the grid with random x,y,z,state, and known mesh
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
+		return false;
+	}
+
+	//Initialize the grid with random x,y,z, state, and known mesh
 
 	return true;
 }
@@ -29,8 +72,30 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSquareSetMeshesTest, "GridTest.SquareGrid.Set 
 bool FSquareSetMeshesTest::RunTest(const FString& Parameters)
 {
 
-	//Construct a ASquareGrid object
-	ASquareGrid SquareTestGrid;
+	//Set random spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
+		return false;
+	}
 
 	//Initialize the grid with random x,y,z,state, and known mesh
 
@@ -45,8 +110,30 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSquareCoordToWorldTest, "GridTest.SquareGrid.C
 bool FSquareCoordToWorldTest::RunTest(const FString& Parameters)
 {
 
-	//Construct a ASquareGrid object
-	ASquareGrid SquareTestGrid;
+	//Set random spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
+		return false;
+	}
 
 	//Initialize the grid with random x,y,z,state, and known mesh
 
@@ -59,8 +146,30 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSquareSetAllHighlightedTest, "GridTest.SquareG
 bool FSquareSetAllHighlightedTest::RunTest(const FString& Parameters)
 {
 
-	//Construct a ASquareGrid object
-	ASquareGrid SquareTestGrid;
+	//Set random spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
+		return false;
+	}
 
 	//Initialize the grid with random x,y,z,state, and known mesh
 
@@ -73,8 +182,30 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSquareGetNumSpacesTest, "GridTest.SquareGrid.G
 bool FSquareGetNumSpacesTest::RunTest(const FString& Parameters)
 {
 
-	//Construct a ASquareGrid object
-	ASquareGrid SquareTestGrid;
+	//Set random spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
+		return false;
+	}
 
 	//Initialize the grid with random x,y,z,state, and known mesh
 
@@ -87,8 +218,30 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSquareTileIsValidTest, "GridTest.SquareGrid.Ti
 bool FSquareTileIsValidTest::RunTest(const FString& Parameters)
 {
 
-	//Construct a ASquareGrid object
-	ASquareGrid SquareTestGrid;
+	//Set random spawning parameters
+	FVector MyLocation(FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f), FMath::RandRange(0.0f, 1.0f));
+	FRotator MyRotation(FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f), FMath::RandRange(0.0f, 360.0f));
+	FActorSpawnParameters SpawnInfo;
+
+	//Create a blank world to spawn our actor in
+	UWorld* World = FAutomationEditorCommonUtils::CreateNewMap();
+
+	//Check the map was created properly
+	if (!IsValid(World))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot create new map"));
+		return false;
+	}
+
+	//Construct a AGrid object
+	ASquareGrid* TestGrid = World->SpawnActor<ASquareGrid>(MyLocation, MyRotation, SpawnInfo);
+
+	//Check the object was constructed properly
+	if (!IsValid(TestGrid))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot construct AGrid object"));
+		return false;
+	}
 
 	//Initialize the grid with random x,y,z,state, and known mesh
 

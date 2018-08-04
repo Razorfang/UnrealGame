@@ -61,6 +61,8 @@ bool FSpawnTest::RunTest(const FString& Parameters)
 		return false;
 	}
 
+	//TODO: Destroy the grid
+
 	return true;
 }
 

@@ -49,3 +49,32 @@ FVector AGrid::GetGridOrigin() const
 	return GetActorLocation(); //This returns the rootcomponent's location relative to the centre of the actor, not our world location
 							   //return GridMesh->GetComponentLocation();
 }
+
+
+void AGrid::HideGridTile(AGridTile* Tile)
+{
+	//http://www.gamedevpuzzler.com/disabling-enabling-an-actor-in-unreal-engine-4/
+
+	UE_LOG(LogTemp, Warning, TEXT("Hiding a tile"));
+
+	Tile->SetActorHiddenInGame(true); //Make it invisible
+	Tile->SetActorEnableCollision(false); //No collision TODO: Is this already false?
+	Tile->SetActorTickEnabled(false); //Do not call tick anymore
+}
+
+
+void AGrid::ShowGridTile(AGridTile* Tile)
+{
+
+	UE_LOG(LogTemp, Warning, TEXT("Showing a tile"));
+
+	Tile->SetActorHiddenInGame(false); //Make it visible
+	Tile->SetActorEnableCollision(true); //Collision on TODO: Do we want collision in the first place?
+	Tile->SetActorTickEnabled(true); //Call tick again TODO: Are we calling tick in the first place?
+}
+
+
+void AGrid::DespawnGridTile(AGridTile* Tile)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Despawning a tile"));
+}
