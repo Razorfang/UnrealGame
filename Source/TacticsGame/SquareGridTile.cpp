@@ -25,3 +25,31 @@ void ASquareGridTile::Tick(float DeltaTime)
 
 }
 
+
+float ASquareGridTile::GetTileLength() const
+{
+	return TileLength;
+}
+float ASquareGridTile::GetTileWidth() const
+{
+	return TileWidth;
+}
+
+float ASquareGridTile::GetTileHeight() const
+{
+	return TileHeight;
+}
+
+
+void ASquareGridTile::SetTileLength(float Length)
+{
+	TileLength = Length;
+}
+void ASquareGridTile::SetTileWidth(float Width)
+{
+	TileWidth = Width;
+}
+void ASquareGridTile::SetTileHeight(float Height)
+{
+	TileHeight = Height;
+}

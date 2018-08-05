@@ -82,7 +82,10 @@ ASquareGridTile* ASquareGrid::SpawnSquareGridTile(int x, int y, int z, float pit
 		//Set the tile's state
 		SquareTile->SetIsHighlighted(state);
 
-		//TODO: Set the tile's length, width, and height
+		//Set the tile's length, width, and height
+		SquareTile->SetTileLength(TileLength);
+		SquareTile->SetTileWidth(TileWidth);
+		SquareTile->SetTileHeight(TileHeight);
 	}
 
 	return SquareTile;
@@ -137,7 +140,7 @@ void ASquareGrid::InitTiles(int length, int width, int height, bool AllTilesStat
 			}
 		}
 
-		//Scale the plane mesh so that it is the right size
+		//TODO: Scale the plane mesh so that it is the right size
 		//FVector NewScale(length, width, 1);
 		//GridMesh->SetWorldScale3D(NewScale);
 
@@ -243,6 +246,24 @@ void ASquareGrid::RecursiveSwap(int i)
 }*/
 
 
+FVector ASquareGrid::GetTileCoord(ASquareGridTile* Tile) const
+{
+	//Get grid origin
+	FVector GridOrigin = GetGridOrigin();
+
+	//Get tile origin
+	FVector TileOrigin = Tile->GetWorldLocation();
+
+	//Use difference to calculate
+
+	int x = roundf((TileOrigin.X - GridOrigin.X) / TileLength);
+	int y = roundf((TileOrigin.Y - GridOrigin.Y) / TileWidth);
+	int z = roundf((TileOrigin.Z - GridOrigin.Z) / TileHeight);
+
+	return FVector(x, y, z);
+}
+
+
 void ASquareGrid::AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh, bool NewTileIsHighlighted)
 {
 	//FVector NewTile = CoordToWorld(x, y, z);
@@ -314,33 +335,53 @@ void ASquareGrid::AddTile(int x, int y, int z, UStaticMeshComponent* NewTileMesh
 
 		//Move all tiles to new spots:
 
-		//Get the new index - this works since we resized the grid
+		//Get the new index - this works since we resized the grid, so this is now within boundaries
 		int NewIndex = CoordToIndex(x, y, z);
 		UE_LOG(LogTemp, Warning, TEXT("New index is %d"), NewIndex);
 
+		//Move all the existing tiles to their correct places
+		//BIG TODO
+
+		//For each tile
+			//Get the (x,y,z)
+			//Convert to new index
+			//Move tile to that index
+
 		//Move everything at and after index to the end
 		int k = Grid.Num() - 1;
-		while (k > NewIndex)
+		//while (k > NewIndex)
+		while (k >= 0)
 		{
-			Grid.Swap(k, k - 1);
+			UE_LOG(LogTemp, Warning, TEXT("Checking"));
+			//Tile
+			if (IsValid(Grid[k]))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Valid"));
+
+				//Get the (x,y,z)
+				FVector coords = GetTileCoord(static_cast<ASquareGridTile* >(Grid[k]));
+				UE_LOG(LogTemp, Warning, TEXT("Coords"));
+
+				//Convert to new index
+				int NewIndex = CoordToIndex(coords.X, coords.Y, coords.Z);
+				UE_LOG(LogTemp, Warning, TEXT("New"));
+
+				//Move tile to that index
+				Grid.Swap(k, NewIndex);
+				UE_LOG(LogTemp, Warning, TEXT("Swap"));
+
+				//Grid.Swap(k, k - 1);
+			}
+
 			k--;
+
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Swapping done"));
 
-		//Put new tile in its place
+		//Put new tile in its place - at the end
 		ASquareGridTile* NewTile = SpawnSquareGridTile(x, y, z, 0, 0, 0, NewTileMesh, NewTileIsHighlighted);
 		Grid[NewIndex] = NewTile;
 		UE_LOG(LogTemp, Warning, TEXT("Assigning done"));
-
-		//Remove unnecessary tiles from the end TODOL I don't think this is actually necessary, since we're only resizing to what we need
-		int  l = Grid.Num() - 1;
-		while (Grid[l] == nullptr)
-		{
-			//Remove end tile
-			Grid.Pop();
-			l--;
-		}
-		UE_LOG(LogTemp, Warning, TEXT("Popping done"));
 	}
 
 	//Check the grid itself

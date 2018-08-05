@@ -98,6 +98,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SquareGrid")
 	FVector CoordToWorld(int x, int y, int z) const; ///
 
+	/* Get the cartesian (x,y,z) of a tile */
+	UFUNCTION(BlueprintPure, Category = "SquareGrid")
+	FVector GetTileCoord (ASquareGridTile* Tile) const;
+
+	/* TODO: Add a row of tiles */
+
+	/* TODO: Add a column of tiles */
+
+	/* TODO: Add a pillar of tiles */
+
 private:
 	/* Used to determine how wide this grid is. This is what we multiply by to translate cartesian to world. Used to scale Y */
 	float TileWidth;

@@ -19,6 +19,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//Getters
+	float GetTileLength() const;
+	float GetTileWidth() const;
+	float GetTileHeight() const;
+
+	//Setters
+	void SetTileLength(float Length);
+	void SetTileWidth(float Width);
+	void SetTileHeight(float Height);
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,7 +36,8 @@ protected:
 
 private:	
 
-	/* The length (size in X) of the tile */
+	/* The length (size in X) of the tile
+	This is set by the grid upon object construction, but can be overwritten later if desired */
 	float TileLength;
 
 	/* The width (size in X) of the tile */
